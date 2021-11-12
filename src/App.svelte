@@ -5,10 +5,10 @@
 </script>
 
 <Schedule {schedule} />
-<Collapser label="debug" initialCollapse={true}>
-  {JSON.stringify($schedule)}
-</Collapser>
 
+<!--<Collapser label="debug" initialCollapse={true}>
+  {JSON.stringify($schedule)}
+</Collapser>-->
 <style>
   :root {
     --labelSize: 8pt;
