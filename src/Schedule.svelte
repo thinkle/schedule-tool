@@ -186,6 +186,9 @@
             <div class="daycol">
               <header>
                 {day.name}
+                {#if day.repeats != 1}
+                  &times;{day.repeats}
+                {/if}
               </header>
               {#each day.blocks as block, bn}
                 <div
@@ -243,7 +246,7 @@
 
   .tabs a.active {
     border-color: #222;
-    background-color: #339;
+    background-color: #335;
     color: white;
   }
   div#edit {
@@ -268,11 +271,19 @@
   .fluid {
     display: flex;
     justify-content: center;
+    gap: 5px;
   }
   .daycol {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+  }
+  .daycol header {
+    text-align: center;
+    background-color: black;
+    color: white;
+    padding: 4px;
+    margin: 2px;
   }
   .blockrow {
     height: calc(0.8vh * var(--height));
