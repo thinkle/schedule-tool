@@ -50,7 +50,7 @@
       >
     </tr>
     <tr>
-      <th>Block</th>{#if expand}<th>Per Day</th><th>Per Week</th><th
+      <th>&nbsp;</th>{#if expand}<th>Per Day</th><th>Per Week</th><th
           >Per Year</th
         >{/if}
     </tr>
