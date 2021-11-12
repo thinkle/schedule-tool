@@ -78,12 +78,12 @@
   const GRID = 2;
   const FLUID = 3;
   let editMode = EDIT;
-  if (location.search) {
+  if (location.search > -1) {
     if (location.search.search(/view/)) {
-      editMode = FLUID;
-    } else if (location.search.search(/grid/)) {
+      editMode = VIEW;
+    } else if (location.search.search(/grid/) > -1) {
       editMode = GRID;
-    } else if (location.search.search(/edit/)) {
+    } else if (location.search.search(/edit/) > -1) {
       editMode = EDIT;
     }
   }
