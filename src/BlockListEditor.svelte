@@ -21,7 +21,7 @@
           const dayProportion = d.repeats / totalDays;
           b.block.total += b.duration * dayProportion;
           if (b.block.academic) {
-            academicTime += b.duration;
+            academicTime += b.duration * dayProportion;
           }
         }
       }
