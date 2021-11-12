@@ -78,6 +78,29 @@
   const GRID = 2;
   const FLUID = 3;
   let editMode = EDIT;
+  if (location.search) {
+    if (location.search.search(/view/)) {
+      editMode = FLUID;
+    } else if (location.search.search(/grid/)) {
+      editMode = GRID;
+    } else if (location.search.search(/edit/)) {
+      editMode = EDIT;
+    }
+  }
+
+  function updateLocation() {
+    console.log("UPDATE LOCATION", editMode);
+    let mode = "edit";
+    if (editMode == GRID) {
+      mode = "grid";
+    }
+    if (editMode == FLUID) {
+      mode = "view";
+    }
+    history.replaceState("", "", `?${mode}${location.hash}`);
+  }
+
+  $: updateLocation(editMode);
 
   function getHeight(block, s) {
     let maxDuration = 0;
