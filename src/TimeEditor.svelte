@@ -13,13 +13,13 @@
     };
     for (let day of $schedule.days) {
       for (let b of day.blocks) {
-        if (!uniqueTimes.durations.find((t) => t == b.duration)) {
+        if (uniqueTimes.durations.indexOf(b.duration) == -1) {
           uniqueTimes.durations.push(b.duration);
           if (durationUpdateMap[b.duration] === undefined) {
             durationUpdateMap[b.duration] = b.duration;
           }
         }
-        if (!uniqueTimes.passingTimes.find((t) => t == b.passing)) {
+        if (uniqueTimes.passingTimes.indexOf(b.passing) == -1) {
           uniqueTimes.passingTimes.push(b.passing);
           if (passingUpdateMap[b.passing] === undefined) {
             passingUpdateMap[b.passing] = b.passing;
