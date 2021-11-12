@@ -120,6 +120,7 @@
     background-color: black;
     color: white;
     padding: 2px;
+    z-index: 10;
   }
   header h2 {
     padding-right: 4em;
