@@ -7,6 +7,7 @@
     $schedule = $schedule;
   }
   function calculateBlockTotals(days) {
+    academicTime = 0;
     const dayProportions = [];
     let totalDays = 0;
     days.map((d) => (totalDays += d.repeats));
@@ -19,6 +20,9 @@
         if (b.block) {
           const dayProportion = d.repeats / totalDays;
           b.block.total += b.duration * dayProportion;
+          if (b.block.academic) {
+            academicTime += b.duration;
+          }
         }
       }
     }
@@ -39,6 +43,7 @@
     $schedule = $schedule;
   }
   let expand;
+  let academicTime = 0;
 </script>
 
 <table class:expand>
@@ -59,6 +64,7 @@
     {#each $schedule.blocks as block}
       <tr style={`--color:${block.color}`}
         ><td>
+          <input type="checkbox" bind:checked={block.academic} />
           <span
             class="name"
             bind:textContent={block.name}
@@ -78,15 +84,30 @@
             >{#if block.total}{getHourTime(block.total)}/day{/if}</td
           >
           <td
-            >{#if block.total}{getHourTime(block.total * 5)}/week{/if}</td
+            >{#if block.total}{getHourTime(block.total * 5)}/wk{/if}</td
           >
           <td
-            >{#if block.total}{getHourTime(block.total * 180)}/year{/if}</td
+            >{#if block.total}{getHourTime(block.total * 180)}/yr{/if}</td
           >
         {/if}
       </tr>
     {/each}
     <tr><td><button on:click={doAddBlock}>+</button></td></tr>
+    {#if expand}<tr>
+        <td>Academic Time</td>
+        {#if expand}
+          <td
+            >{#if academicTime}{getHourTime(academicTime)}/day{/if}</td
+          >
+          <td
+            >{#if academicTime}{getHourTime(academicTime * 5)}/wk{/if}</td
+          >
+          <td
+            >{#if academicTime}{getHourTime(academicTime * 180)}/yr{/if}</td
+          >
+        {/if}
+      </tr>
+    {/if}
   </tbody>
 </table>
 
