@@ -80,7 +80,7 @@
   let editMode = EDIT;
   if (location.search > -1) {
     if (location.search.search(/view/)) {
-      editMode = VIEW;
+      editMode = FLUID;
     } else if (location.search.search(/grid/) > -1) {
       editMode = GRID;
     } else if (location.search.search(/edit/) > -1) {
