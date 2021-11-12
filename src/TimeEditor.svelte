@@ -53,6 +53,26 @@
     }
     $schedule = $schedule;
   }
+
+  let passingChange;
+  let durationChange;
+
+  $: {
+    durationChange = false;
+    for (let d of times.durations) {
+      if (durationUpdateMap[d] != d) {
+        durationChange = true;
+      }
+    }
+  }
+  $: {
+    passingChange = false;
+    for (let p of times.passingTimes) {
+      if (passingUpdateMap[p] != p) {
+        passingChange = true;
+      }
+    }
+  }
 </script>
 
 <div>
@@ -68,7 +88,9 @@
       </li>
     {/each}
   </ul>
-  <button on:click={updateDurations}>Update Lengths</button>
+  <button on:click={updateDurations} disabled={!durationChange}
+    >Update Lengths</button
+  >
 </div>
 <div>
   <h5>Passing Times</h5>
@@ -83,16 +105,17 @@
       </li>
     {/each}
   </ul>
-  <button on:click={updatePassing}>Update Passing Time</button>
+  <button on:click={updatePassing} disabled={!passingChange}
+    >Update Passing Time</button
+  >
 </div>
 
 <style>
   div {
-    margin-bottom: 1em;
-  }
-  div {
     display: flex;
     flex-direction: column;
+    max-width: 180px;
+    margin-bottom: 1em;
   }
   div > button {
     align-self: flex-end;
@@ -109,7 +132,6 @@
     padding-left: 0;
     display: flex;
     flex-direction: column;
-    max-width: 180px;
     margin: 0;
   }
   li {
