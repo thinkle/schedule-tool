@@ -22,6 +22,16 @@
     emitChange();
   }
 
+  function insertBlockBefore(n) {
+    let lastBlock = day.blocks[n];
+    day.blocks.splice(n, 0, {
+      duration: lastBlock.duration,
+      passing: lastBlock.passing,
+      block: {},
+    });
+    emitChange();
+  }
+
   function deleteBlock(index) {
     console.log("Delete block", index);
     day.blocks.splice(index, 1);
@@ -75,6 +85,10 @@
 
   <section>
     {#each day.blocks as block, blockindex (block)}
+      <div class="border">
+        <button on:click={() => insertBlockBefore(blockindex)}>+</button>
+        <div class="line" />
+      </div>
       <BlockEditor
         {dayindex}
         {blockindex}
@@ -165,5 +179,30 @@
     background-color: #222;
     color: #fefefe;
     font-size: 80%;
+  }
+  .line {
+    width: 100%;
+    height: 2px;
+    background-color: #777;
+  }
+  .border {
+    position: relative;
+    height: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0;
+  }
+  .border button {
+    position: absolute;
+    left: calc(100% / 2 - 1em);
+    top: calc(-1em + 10px);
+    width: 2em;
+    height: 2em;
+    visibility: hidden;
+  }
+  .border:hover button,
+  .border button:hover {
+    z-index: 8;
+    visibility: visible;
   }
 </style>
