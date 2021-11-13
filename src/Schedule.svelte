@@ -77,18 +77,25 @@
   const EDIT = 1;
   const GRID = 2;
   const FLUID = 3;
+  let alreadyMounted = false;
   let editMode = EDIT;
-  if (location.search > -1) {
-    if (location.search.search(/view/)) {
+  function mounted(node) {
+    console.log("Mounted", node, "check out", location.search);
+    if (location.search.search(/view/) > -1) {
       editMode = FLUID;
     } else if (location.search.search(/grid/) > -1) {
       editMode = GRID;
     } else if (location.search.search(/edit/) > -1) {
       editMode = EDIT;
     }
+    alreadyMounted = true;
   }
 
   function updateLocation() {
+    if (!alreadyMounted) {
+      console.log("Not mounted yet, do not update");
+      return;
+    }
     console.log("UPDATE LOCATION", editMode);
     let mode = "edit";
     if (editMode == GRID) {
@@ -118,7 +125,7 @@
   }
 </script>
 
-<main>
+<main use:mounted>
   <header>
     <Collapser label="Blocks">
       <BlockListEditor {schedule} />
