@@ -4,6 +4,8 @@
   import { schedule } from "./blocks";
   import { getBlockTimes } from "./timeUtils";
   import { createEventDispatcher } from "svelte";
+  export let showPassing;
+  import { fly, fade } from "svelte/transition";
   const dispatch = createEventDispatcher();
   const deleteBlock = () => dispatch("delete");
 
@@ -14,9 +16,16 @@
     $schedule = $schedule;
   }
   let id = `d${dayindex}-b${blockindex}`;
+  let active;
 </script>
 
-<div class="block" style={`--color:${block?.block?.color || "white"}`}>
+<div
+  class:active
+  class="block"
+  style={`--color:${block?.block?.color || "white"}`}
+  on:click={() => (active = true)}
+  on:mouseout={() => (active = false)}
+>
   <button on:click={deleteBlock} class="deleteButton">&times;</button>
   <header>{getBlockTimes($schedule.days[dayindex], blockindex)}</header>
   <div class="flex">
@@ -42,17 +51,28 @@
     </div>
   </div>
 </div>
-<div class="passing">
-  <label for={`p${id}`}>Passing time:</label>
-  <input
-    bind:value={block.passing}
-    on:change={update}
-    type="number"
-    id={`p${id}`}
-  />
-</div>
+{#if showPassing}
+  <div class="passing" in:fly|local={{ y: -50 }} out:fade|local>
+    <label for={`p${id}`}>Passing time:</label>
+    <input
+      bind:value={block.passing}
+      on:change={update}
+      type="number"
+      id={`p${id}`}
+    />
+  </div>
+{/if}
 
 <style>
+  div {
+    overflow: hidden;
+  }
+  div:hover,
+  div.active {
+    overflow: visible;
+    position: relative;
+    z-index: 5;
+  }
   .flex {
     display: flex;
   }
@@ -75,6 +95,7 @@
     background-color: var(--color);
     border-color: black;
     position: relative;
+    height: 100%;
   }
   label {
     font-size: var(--labelSize);

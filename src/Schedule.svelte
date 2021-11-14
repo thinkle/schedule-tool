@@ -73,7 +73,24 @@
     }
   }
 
+  function calculateOffsets(s, pixelsPerMinute) {
+    //const pixelsPerBlock = 100 + (showPassing & 20 || 0);
+    console.log("Recalculate offsets!", pixelsPerMinute);
+    for (let d of s.days) {
+      let voffset = 0;
+      for (let b of d.blocks) {
+        b.offset = voffset;
+        voffset += b.duration * pixelsPerMinute;
+        b.height = b.duration * pixelsPerMinute;
+        voffset += b.passing * pixelsPerMinute;
+      }
+      d.height = voffset;
+    }
+    $schedule = $schedule;
+  }
+
   $: updateBlocks($schedule.days);
+  $: calculateOffsets($schedule, ppm);
   const EDIT = 1;
   const GRID = 2;
   const FLUID = 3;
@@ -82,9 +99,11 @@
   function mounted(node) {
     console.log("Mounted", node, "check out", location.search);
     if (location.search.search(/view/) > -1) {
-      editMode = FLUID;
+      editMode = GRID;
+      timelineMode = true;
     } else if (location.search.search(/grid/) > -1) {
       editMode = GRID;
+      timelineMode = false;
     } else if (location.search.search(/edit/) > -1) {
       editMode = EDIT;
     }
@@ -123,10 +142,28 @@
     }
     return 100 * (block.duration / maxDuration);
   }
+  let showPassing;
+  let timelineMode;
+  let ppm = 3;
 </script>
 
 <main use:mounted>
   <header>
+    <Collapser label="Settings">
+      <div class="flex">
+        <input id="sp" type="checkbox" bind:checked={showPassing} />
+        <label for="sp">Show passing</label>
+      </div>
+      <div>
+        <div class="flex">
+          <input id="tm" type="checkbox" bind:checked={timelineMode} />
+          <label for="tm">Timeline</label>
+        </div>
+        {#if timelineMode}
+          <input type="range" bind:value={ppm} step="0.1" min="0.5" max="9" />
+        {/if}
+      </div>
+    </Collapser>
     <Collapser label="Blocks">
       <BlockListEditor {schedule} />
     </Collapser>
@@ -145,20 +182,12 @@
         }}>Edit</a
       >
       <a
-        href="#fluid"
-        class:active={editMode == FLUID}
-        on:click={(e) => {
-          editMode = FLUID;
-          e.preventDefault();
-        }}>View (Proportional)</a
-      >
-      <a
         href="#grid"
         class:active={editMode == GRID}
         on:click={(e) => {
           editMode = GRID;
           e.preventDefault();
-        }}>View Table</a
+        }}>View</a
       >
     </div>
     <div class="body">
@@ -168,6 +197,8 @@
             <div in:fly|local={{ x: -200, y: 200 }} out:fade>
               <Day
                 {day}
+                {showPassing}
+                {timelineMode}
                 dayindex={i}
                 on:change={updateDay}
                 on:input={updateDay}
@@ -180,34 +211,48 @@
       {:else if editMode == GRID}
         <div id="view" in:fade>
           <h2>Schedule</h2>
-          <table>
-            <tr>
-              {#each $schedule.days as day}
-                <th
-                  >{day.name}
-                  {#if day.repeats != 1}
-                    &times;{day.repeats}
-                  {/if}
-                </th>
-              {/each}
-            </tr>
-            {#each blockCountList as placeholder, i}
+          <table class:timeline={timelineMode}>
+            <thead>
               <tr>
                 {#each $schedule.days as day}
-                  {#if day.blocks[i]}
-                    <td
-                      style={`background-color:${day.blocks[i].block?.color}`}
-                    >
-                      {day.blocks[i]?.block?.name || ""}
-                      <br />{getBlockTimes(day, i)}
-                      <br />({getHourTime(day.blocks[i].duration)})
-                    </td>
-                  {:else}
-                    <td>&nbsp;</td>
-                  {/if}
+                  <th
+                    >{day.name}
+                    {#if day.repeats != 1}
+                      &times;{day.repeats}
+                    {/if}
+                  </th>
                 {/each}
               </tr>
-            {/each}
+            </thead>
+            <tbody
+              style={`--height:${Math.max(
+                ...$schedule.days.map((d) => d.height)
+              )}px;width:100%;`}
+            >
+              {#each blockCountList as placeholder, i}
+                <tr>
+                  {#each $schedule.days as day, dn}
+                    {#if day.blocks[i]}
+                      <td
+                        style={`--left:${
+                          (100 * dn) / $schedule.days.length
+                        }%;background-color:${
+                          day.blocks[i].block?.color
+                        };--offset:${day.blocks[i].offset}px;--height:${
+                          day.blocks[i].height
+                        }px`}
+                      >
+                        {day.blocks[i]?.block?.name || ""}
+                        <br />{getBlockTimes(day, i)}
+                        <br />({getHourTime(day.blocks[i].duration)})
+                      </td>
+                    {:else}
+                      <td class="empty">&nbsp;</td>
+                    {/if}
+                  {/each}
+                </tr>
+              {/each}
+            </tbody>
           </table>
         </div>
       {:else if editMode == FLUID}
@@ -331,5 +376,43 @@
   }
   .fluid .dur {
     font-size: 8pt;
+  }
+  .flex {
+    display: flex;
+    gap: 5px;
+  }
+  .timeline thead th {
+    min-width: 200px;
+  }
+  .timeline tbody {
+    position: relative;
+    height: var(--height);
+    width: 100%;
+    display: block;
+  }
+  .timeline tr {
+    width: 100%;
+    display: block;
+  }
+  .timeline td {
+    min-height: var(--height);
+  }
+  .timeline td {
+    overflow: hidden;
+  }
+  .timeline td:hover {
+    overflow: visible;
+    font-weight: bold;
+  }
+  .timeline td {
+    position: absolute;
+    top: var(--offset);
+    left: var(--left);
+    height: var(--height);
+    width: 200px;
+    box-sizing: border-box;
+  }
+  .timeline td.empty {
+    visibility: hidden;
   }
 </style>

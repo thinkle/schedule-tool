@@ -2,12 +2,14 @@
   import { createEventDispatcher } from "svelte";
   import { getHourTime } from "./timeUtils.js";
   import BlockEditor from "./BlockEditor.svelte";
+  export let showPassing;
+  export let timelineMode;
+  export let day;
+  export let dayindex;
   const dispatch = createEventDispatcher();
   const deleteDay = () => dispatch("delete");
   const copyDay = () => dispatch("copy");
-  export let day;
   let id = "day-" + Math.random();
-  export let dayindex;
   function emitChange() {
     console.log("Day change", day.name, day.blocks);
     dispatch("change");
@@ -54,6 +56,9 @@
   }
 
   $: calculateTimes(day);
+  function add(accumulator, a) {
+    return accumulator + a;
+  }
 </script>
 
 <div class="m">
@@ -83,25 +88,46 @@
     </div>
   </header>
 
-  <section>
+  <section class:timeline={timelineMode} style={`height:${day.height}px`}>
     {#each day.blocks as block, blockindex (block)}
-      <div class="border">
-        <button on:click={() => insertBlockBefore(blockindex)}>+</button>
-        <div class="line" />
+      <div
+        class="block"
+        style={`--voffset:${block.offset}px;--height:${block.height}px`}
+      >
+        <div class="border">
+          <button on:click={() => insertBlockBefore(blockindex)}>+</button>
+          <div class="line" />
+        </div>
+        <BlockEditor
+          {dayindex}
+          {blockindex}
+          {showPassing}
+          on:change={emitChange}
+          on:delete={() => deleteBlock(blockindex)}
+          on:input={emitChange}
+        />
       </div>
-      <BlockEditor
-        {dayindex}
-        {blockindex}
-        on:change={emitChange}
-        on:delete={() => deleteBlock(blockindex)}
-        on:input={emitChange}
-      />
     {/each}
-    <button on:click={addBlock}>+</button>
+    <button class="lastAdd" on:click={addBlock}>+</button>
   </section>
 </div>
 
 <style>
+  .timeline {
+    position: relative;
+  }
+  .timeline .block {
+    position: absolute;
+    top: var(--voffset);
+    height: var(--height);
+    display: flex;
+    flex-direction: column;
+  }
+  .timeline .lastAdd {
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 1em);
+  }
   .copy {
     position: relative;
   }
