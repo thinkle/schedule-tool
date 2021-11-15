@@ -75,27 +75,32 @@ function makeSchedule(
 
 export let schedule = makeSchedule();
 
-if (location.hash) {
-  if (location.hash.substr(1, 3) == "~v2") {
-    var data = JSON.parse(LZ.decompressFromBase64(location.hash.substr(4)));
-  } else {
-    console.log("Old hash (not compressed)");
-    var data = JSON.parse(atob(location.hash.substr(1)));
-  }
-
-  console.log("Got:", data);
-  for (let d of data.days) {
-    for (let b of d.blocks) {
-      let realBlock = data.blocks.find(
-        (block) => JSON.stringify(block) == JSON.stringify(b.block)
-      );
-      b.block = realBlock;
+function parseHash() {
+  if (location.hash) {
+    if (location.hash.substr(1, 3) == "~v2") {
+      var data = JSON.parse(LZ.decompressFromBase64(location.hash.substr(4)));
+    } else {
+      console.log("Old hash (not compressed)");
+      var data = JSON.parse(atob(location.hash.substr(1)));
     }
+    for (let d of data.days) {
+      for (let b of d.blocks) {
+        let realBlock = data.blocks.find(
+          (block) => JSON.stringify(block) == JSON.stringify(b.block)
+        );
+        b.block = realBlock;
+      }
+    }
+    schedule.set(data);
   }
-  schedule.set(data);
 }
+parseHash();
 
 schedule.subscribe((v) => {
   const compressed = LZ.compressToBase64(JSON.stringify(v));
   location.hash = "~v2" + compressed;
+});
+
+window.addEventListener("hashchange", () => {
+  parseHash();
 });
