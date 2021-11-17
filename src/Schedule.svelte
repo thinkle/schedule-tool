@@ -1,4 +1,6 @@
 <script>
+  import ScheduleTable from "./ScheduleTable.svelte";
+
   import { fly, fade } from "svelte/transition";
   export let schedule;
   import Day from "./Day.svelte";
@@ -64,14 +66,6 @@
     console.log("Copied", dindex, "got", $schedule.days);
     $schedule = $schedule;
   }
-  let blockCountList = [];
-  function updateBlocks(days) {
-    for (let d of days) {
-      while (d.blocks.length > blockCountList.length) {
-        blockCountList.push({});
-      }
-    }
-  }
 
   function calculateOffsets(s, pixelsPerMinute) {
     //const pixelsPerBlock = 100 + (showPassing & 20 || 0);
@@ -89,7 +83,6 @@
     $schedule = $schedule;
   }
 
-  $: updateBlocks($schedule.days);
   $: calculateOffsets($schedule, ppm);
   const EDIT = 1;
   const GRID = 2;
@@ -211,49 +204,10 @@
       {:else if editMode == GRID}
         <div id="view" in:fade>
           <h2>Schedule</h2>
-          <table class:timeline={timelineMode}>
-            <thead>
-              <tr>
-                {#each $schedule.days as day}
-                  <th
-                    >{day.name}
-                    {#if day.repeats != 1}
-                      &times;{day.repeats}
-                    {/if}
-                  </th>
-                {/each}
-              </tr>
-            </thead>
-            <tbody
-              style={`--height:${Math.max(
-                ...$schedule.days.map((d) => d.height)
-              )}px;width:100%;`}
-            >
-              {#each blockCountList as placeholder, i}
-                <tr>
-                  {#each $schedule.days as day, dn}
-                    {#if day.blocks[i]}
-                      <td
-                        style={`--left:${
-                          (100 * dn) / $schedule.days.length
-                        }%;background-color:${
-                          day.blocks[i].block?.color
-                        };--offset:${day.blocks[i].offset}px;--height:${
-                          day.blocks[i].height
-                        }px`}
-                      >
-                        {day.blocks[i]?.block?.name || ""}
-                        <br />{getBlockTimes(day, i)}
-                        <br />({getHourTime(day.blocks[i].duration)})
-                      </td>
-                    {:else}
-                      <td class="empty">&nbsp;</td>
-                    {/if}
-                  {/each}
-                </tr>
-              {/each}
-            </tbody>
-          </table>
+          <ScheduleTable {timelineMode} {schedule} />
+          {#if timelineMode}
+            <div class="yardstick" />
+          {/if}
         </div>
       {:else if editMode == FLUID}
         <div class="fluid">
