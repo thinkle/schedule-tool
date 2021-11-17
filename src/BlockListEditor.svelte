@@ -44,33 +44,41 @@
   }
   let expand;
   let academicTime = 0;
+  let colors = false;
 </script>
 
-<table class:expand>
+<table class:expand class:colors>
   <thead>
     <tr>
-      <th>Block</th><th colspan="3"
-        ><button class="clock" on:click={() => (expand = !expand)}>⧗</button
-        ></th
+      <th>Block</th><th colspan="3">
+        <button class="dets" on:click={() => (colors = !colors)}>c</button>
+        <button class="clock" on:click={() => (expand = !expand)}>⧗</button></th
       >
     </tr>
     <tr>
-      <th>&nbsp;</th>{#if expand}<th>Per Day</th><th>Per Week</th><th
+      <th>&nbsp;</th>{#if expand}<th /><th>Per Day</th><th>Per Week</th><th
           >Per Year</th
         >{/if}
     </tr>
   </thead>
   <tbody>
     {#each $schedule.blocks as block}
-      <tr style={`--color:${block.color}`}
+      <tr style={`--color:${block.color};--textcolor:${block.textcolor}`}
         ><td>
-          <input type="checkbox" bind:checked={block.academic} />
-          <span
-            class="name"
-            bind:textContent={block.name}
-            on:input={updateS}
-            contenteditable="true"
-          />
+          <div>
+            <span
+              class="name"
+              bind:textContent={block.name}
+              on:input={updateS}
+              contenteditable="true"
+            />
+            {#if colors}
+              <div>
+                Color: <input bind:value={block.color} type="color" />
+                Text: <input bind:value={block.textcolor} type="color" />
+              </div>
+            {/if}
+          </div>
           <button
             on:click={function () {
               deleteBlock(block);
@@ -80,6 +88,7 @@
           </button>
         </td>
         {#if expand}
+          <td><input type="checkbox" bind:checked={block.academic} /></td>
           <td
             >{#if block.total}{getHourTime(block.total)}/day{/if}</td
           >
@@ -96,6 +105,7 @@
     {#if expand}<tr>
         <td>Academic Time</td>
         {#if expand}
+          <td />
           <td
             >{#if academicTime}{getHourTime(academicTime)}/day{/if}</td
           >
@@ -114,6 +124,7 @@
 <style>
   tr td:nth-child(1) {
     background-color: var(--color);
+    color: var(--textcolor);
     display: flex;
   }
   .name {
@@ -128,12 +139,15 @@
     justify-content: center;
     margin-left: auto;
   }
-  .clock {
+  th button {
     color: #888;
     margin-left: 0;
     transition: color 300ms;
   }
   .expand .clock {
+    color: #222;
+  }
+  .colors .dets {
     color: #222;
   }
 </style>

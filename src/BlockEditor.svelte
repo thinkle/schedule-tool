@@ -22,7 +22,9 @@
 <div
   class:active
   class="block"
-  style={`--color:${block?.block?.color || "white"}`}
+  style={`--color:${block?.block?.color || "white"};--textcolor:${
+    block?.block?.textcolor || "black"
+  }`}
   on:click={() => (active = true)}
   on:mouseout={() => (active = false)}
 >
@@ -93,6 +95,7 @@
   }
   div.block {
     background-color: var(--color);
+    color: var(--textcolor);
     border-color: black;
     position: relative;
     height: 100%;
