@@ -135,6 +135,15 @@
     }
     return 100 * (block.duration / maxDuration);
   }
+  let copyContainer;
+  function copyToClipbord() {
+    console.log(copyContainer);
+    let blob = new Blob([copyContainer.innerHTML], { type: "text/html" });
+    const item = new ClipboardItem({ "text/html": blob });
+    navigator.clipboard.write([item]);
+    console.log("Copied!");
+  }
+
   let showPassing;
   let timelineMode;
   let ppm = 3;
@@ -207,12 +216,16 @@
         <div id="view" in:fade>
           <div class="flex">
             <h2 contenteditable bind:textContent={$schedule.title}>Schedule</h2>
+            <button on:click={copyToClipbord}>Copy schedule</button>
             <label>
               <input id="tm" type="checkbox" bind:checked={timelineMode} />
               Timeline
             </label>
           </div>
-          <ScheduleTable {timelineMode} {schedule} />
+          <div bind:this={copyContainer}>
+            <h2 class="hide">{$schedule.title}</h2>
+            <ScheduleTable {timelineMode} {schedule} />
+          </div>
           {#if timelineMode}
             <div class="yardstick" />
           {/if}
@@ -376,5 +389,8 @@
   }
   .timeline td.empty {
     visibility: hidden;
+  }
+  .hide {
+    display: none;
   }
 </style>
