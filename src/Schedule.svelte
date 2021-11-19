@@ -144,8 +144,10 @@
   <header>
     <Collapser label="Settings">
       <div class="flex">
-        <input id="sp" type="checkbox" bind:checked={showPassing} />
-        <label for="sp">Show passing</label>
+        {#if editMode == EDIT}
+          <input id="sp" type="checkbox" bind:checked={showPassing} />
+          <label for="sp">Show passing</label>
+        {/if}
       </div>
       <div>
         <div class="flex">
@@ -203,7 +205,13 @@
         </div>
       {:else if editMode == GRID}
         <div id="view" in:fade>
-          <h2>Schedule</h2>
+          <div class="flex">
+            <h2>Schedule</h2>
+            <label>
+              <input id="tm" type="checkbox" bind:checked={timelineMode} />
+              Timeline
+            </label>
+          </div>
           <ScheduleTable {timelineMode} {schedule} />
           {#if timelineMode}
             <div class="yardstick" />
