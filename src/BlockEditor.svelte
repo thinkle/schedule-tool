@@ -9,7 +9,14 @@
   const dispatch = createEventDispatcher();
   const deleteBlock = () => dispatch("delete");
 
-  let block = $schedule.days[dayindex].blocks[blockindex];
+  let block;
+
+  $: try {
+    block = $schedule.days[dayindex].blocks[blockindex];
+  } catch (err) {
+    console.log("Weird no block");
+    block = null;
+  }
   function update() {
     console.log("Update", block);
     $schedule.days[dayindex].blocks[blockindex] = block;
@@ -19,50 +26,53 @@
   let active;
 </script>
 
-<div
-  class:active
-  class="block"
-  style={`--color:${block?.block?.color || "white"};--textcolor:${
-    block?.block?.textcolor || "black"
-  }`}
-  on:click={() => (active = true)}
-  on:mouseout={() => (active = false)}
->
-  <button on:click={deleteBlock} class="deleteButton">&times;</button>
-  <header>{getBlockTimes($schedule.days[dayindex], blockindex)}</header>
-  <div class="flex">
-    <div>
-      <label for={`b${id}`}>Block</label><select
-        bind:value={block.block}
-        on:change
-        id={`b${id}`}
-      >
-        <option value={undefined}>-</option>
-        {#each $schedule.blocks as b}
-          <option value={b}>{b.name}</option>
-        {/each}
-      </select>
+{#if block}
+  <div
+    class:active
+    class="block"
+    style={`--color:${block?.block?.color || "white"};--textcolor:${
+      block?.block?.textcolor || "black"
+    }`}
+    on:click={() => (active = true)}
+    on:mouseout={() => (active = false)}
+    on:blur={() => (active = false)}
+  >
+    <button on:click={deleteBlock} class="deleteButton">&times;</button>
+    <header>{getBlockTimes($schedule.days[dayindex], blockindex)}</header>
+    <div class="flex">
+      <div>
+        <label for={`b${id}`}>Block</label><select
+          bind:value={block.block}
+          on:change
+          id={`b${id}`}
+        >
+          <option value={undefined}>-</option>
+          {#each $schedule.blocks as b}
+            <option value={b}>{b.name}</option>
+          {/each}
+        </select>
+      </div>
+      <div>
+        <label for={`d${id}`}>Duration:</label><input
+          id={`d${id}`}
+          bind:value={block.duration}
+          on:change={update}
+          type="number"
+        />
+      </div>
     </div>
-    <div>
-      <label for={`d${id}`}>Duration:</label><input
-        id={`d${id}`}
-        bind:value={block.duration}
+  </div>
+  {#if showPassing}
+    <div class="passing" in:fly|local={{ y: -50 }} out:fade|local>
+      <label for={`p${id}`}>Passing time:</label>
+      <input
+        bind:value={block.passing}
         on:change={update}
         type="number"
+        id={`p${id}`}
       />
     </div>
-  </div>
-</div>
-{#if showPassing}
-  <div class="passing" in:fly|local={{ y: -50 }} out:fade|local>
-    <label for={`p${id}`}>Passing time:</label>
-    <input
-      bind:value={block.passing}
-      on:change={update}
-      type="number"
-      id={`p${id}`}
-    />
-  </div>
+  {/if}
 {/if}
 
 <style>

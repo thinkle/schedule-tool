@@ -1,3 +1,7 @@
+<script context="module">
+  var indexer = 1;
+</script>
+
 <script>
   import { createEventDispatcher } from "svelte";
   import { getHourTime } from "./timeUtils.js";
@@ -6,12 +10,39 @@
   export let timelineMode;
   export let day;
   export let dayindex;
+
+  import { quintOut } from "svelte/easing";
+  import { crossfade } from "svelte/transition";
+  import { flip } from "svelte/animate";
+
+  const [send, receive] = crossfade({
+    duration: (d) => Math.sqrt(d * 200),
+
+    fallback(node, params) {
+      const style = getComputedStyle(node);
+      const transform = style.transform === "none" ? "" : style.transform;
+
+      return {
+        duration: 300,
+        easing: quintOut,
+        css: (t) => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`,
+      };
+    },
+  });
+
   const dispatch = createEventDispatcher();
   const deleteDay = () => dispatch("delete");
   const copyDay = () => dispatch("copy");
   let id = "day-" + Math.random();
   function emitChange() {
     console.log("Day change", day.name, day.blocks);
+    console.log(
+      "Blocks are:",
+      day.blocks.map((b) => `${b.block?.name} ${b.duration}`)
+    );
     dispatch("change");
   }
   function addBlock() {
@@ -30,7 +61,9 @@
       duration: lastBlock.duration,
       passing: lastBlock.passing,
       block: {},
+      id: indexer,
     });
+    indexer += 1;
     emitChange();
   }
 
@@ -78,6 +111,34 @@
   function add(accumulator, a) {
     return accumulator + a;
   }
+
+  function addIndices(blocks) {
+    let indices = [];
+    for (let b of blocks) {
+      console.log("Look at", b, b.id);
+      if (!b.id) {
+        b.id = indexer;
+        indexer += 1;
+      } else if (b.id >= indexer) {
+        indexer = b.id + 1;
+      }
+      if (indices.indexOf(b.id) > -1) {
+        console.log("Dup! set to ", indexer);
+        b.id = indexer;
+        indexer += 1;
+      }
+      indices.push(b.id);
+    }
+    indexed = true;
+    console.log(
+      "Indexed!",
+      indices,
+      blocks.map((b) => b.id),
+      blocks
+    );
+  }
+  let indexed = false;
+  $: addIndices(day.blocks);
 </script>
 
 <div class="m">
@@ -108,30 +169,35 @@
   </header>
 
   <section class:timeline={timelineMode} style={`height:${day.height}px`}>
-    {#each day.blocks as block, blockindex (block)}
-      <div
-        class="block"
-        style={`--voffset:${block.offset}px;--height:${block.height}px`}
-      >
-        <div class="border">
-          {#if blockindex > 0}<button
-              class="down"
-              on:click={() => moveUp(blockindex)}>↕</button
-            >
-          {/if}
-          <button on:click={() => insertBlockBefore(blockindex)}>+</button>
-          <div class="line" />
+    {#if indexed}
+      {#each day.blocks as block, blockindex (block.id)}
+        <div
+          in:receive={{ key: block.id }}
+          out:send={{ key: block.id }}
+          animate:flip={{ duration: 300 }}
+          class="block"
+          style={`--voffset:${block.offset}px;--height:${block.height}px`}
+        >
+          <div class="border">
+            {#if blockindex > 0}<button
+                class="down"
+                on:click={() => moveUp(blockindex)}>↕</button
+              >
+            {/if}
+            <button on:click={() => insertBlockBefore(blockindex)}>+</button>
+            <div class="line" />
+          </div>
+          <BlockEditor
+            {dayindex}
+            {blockindex}
+            {showPassing}
+            on:change={emitChange}
+            on:delete={() => deleteBlock(blockindex)}
+            on:input={emitChange}
+          />
         </div>
-        <BlockEditor
-          {dayindex}
-          {blockindex}
-          {showPassing}
-          on:change={emitChange}
-          on:delete={() => deleteBlock(blockindex)}
-          on:input={emitChange}
-        />
-      </div>
-    {/each}
+      {/each}
+    {/if}
     <button class="lastAdd" on:click={addBlock}>+</button>
   </section>
 </div>
@@ -146,6 +212,10 @@
     height: var(--height);
     display: flex;
     flex-direction: column;
+  }
+  .lastAdd {
+    margin-left: auto;
+    margin-right: auto;
   }
   .timeline .lastAdd {
     position: absolute;
@@ -232,8 +302,12 @@
   }
   .line {
     width: 100%;
-    height: 2px;
-    background-color: #777;
+    height: 0px;
+    transition: border-bottom-color 300ms;
+    border-bottom: 2px dotted #777;
+  }
+  .border:hover .line {
+    border-bottom-color: rgb(153, 175, 248);
   }
   .border {
     position: relative;
@@ -251,10 +325,10 @@
     visibility: hidden;
   }
   .border button.up {
-    left: 0;
+    left: 10px;
   }
   .border button.down {
-    left: 100%;
+    left: calc(100% - 2em);
   }
   .border:hover button,
   .border button:hover {
