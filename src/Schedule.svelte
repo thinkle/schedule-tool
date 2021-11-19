@@ -206,7 +206,7 @@
       {:else if editMode == GRID}
         <div id="view" in:fade>
           <div class="flex">
-            <h2>Schedule</h2>
+            <h2 contenteditable bind:textContent={$schedule.title}>Schedule</h2>
             <label>
               <input id="tm" type="checkbox" bind:checked={timelineMode} />
               Timeline

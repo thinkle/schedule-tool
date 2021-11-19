@@ -70,6 +70,7 @@ function makeSchedule(
   return writable({
     blocks,
     days,
+    title: "Schedule",
   });
 }
 
