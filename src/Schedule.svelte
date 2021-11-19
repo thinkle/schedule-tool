@@ -223,7 +223,9 @@
             </label>
           </div>
           <div bind:this={copyContainer}>
-            <h2 class="hide">{$schedule.title}</h2>
+            <h2 class="hide">
+              <a href={window.location.href}>{$schedule.title}</a>
+            </h2>
             <ScheduleTable {timelineMode} {schedule} />
           </div>
           {#if timelineMode}
