@@ -34,6 +34,25 @@
     emitChange();
   }
 
+  function moveUp(n) {
+    day.blocks = [
+      ...day.blocks.slice(0, n - 1), /// before
+      day.blocks[n],
+      day.blocks[n - 1],
+      ...day.blocks.slice(n + 1),
+    ];
+    emitChange();
+  }
+  function moveDown(n) {
+    day.blocks = [
+      ...day.blocks.slice(0, n),
+      day.blocks[n + 1],
+      day.blocks[n],
+      ...day.blocks.slice(n + 2),
+    ];
+    emitChange();
+  }
+
   function deleteBlock(index) {
     console.log("Delete block", index);
     day.blocks.splice(index, 1);
@@ -95,6 +114,11 @@
         style={`--voffset:${block.offset}px;--height:${block.height}px`}
       >
         <div class="border">
+          {#if blockindex > 0}<button
+              class="down"
+              on:click={() => moveUp(blockindex)}>↕</button
+            >
+          {/if}
           <button on:click={() => insertBlockBefore(blockindex)}>+</button>
           <div class="line" />
         </div>
@@ -225,6 +249,12 @@
     width: 2em;
     height: 2em;
     visibility: hidden;
+  }
+  .border button.up {
+    left: 0;
+  }
+  .border button.down {
+    left: 100%;
   }
   .border:hover button,
   .border button:hover {
