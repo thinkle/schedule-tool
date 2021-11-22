@@ -1,6 +1,6 @@
 <script>
   import ScheduleTable from "./ScheduleTable.svelte";
-
+  import { tick } from "svelte";
   import { fly, fade } from "svelte/transition";
   export let schedule;
   import Day from "./Day.svelte";
@@ -8,7 +8,19 @@
   import TimeEditor from "./TimeEditor.svelte";
   import BlockListEditor from "./BlockListEditor.svelte";
   import Collapser from "./Collapser.svelte";
+
   function updateDay() {
+    $schedule = $schedule;
+  }
+
+  function moveDayEarlier(index) {
+    $schedule.days = [
+      ...$schedule.days.slice(0, index - 1),
+      $schedule.days[index],
+      $schedule.days[index - 1],
+      ...$schedule.days.slice(index + 1),
+    ];
+    console.log("Moved", index, "now we got", $schedule.days);
     $schedule = $schedule;
   }
 
@@ -136,12 +148,22 @@
     return 100 * (block.duration / maxDuration);
   }
   let copyContainer;
-  function copyToClipbord() {
+  async function copyToClipbord() {
+    let changedTimeline = false;
+    if (timelineMode) {
+      timelineMode = false;
+      changedTimeline = true;
+      await tick();
+      console.log("Timeline mode is off");
+    }
     console.log(copyContainer);
     let blob = new Blob([copyContainer.innerHTML], { type: "text/html" });
     const item = new ClipboardItem({ "text/html": blob });
     navigator.clipboard.write([item]);
     console.log("Copied!");
+    if (changedTimeline) {
+      timelineMode = true;
+    }
   }
 
   let showPassing;
@@ -198,7 +220,16 @@
       {#if editMode == EDIT}
         <div id="edit" in:fade>
           {#each $schedule.days as day, i}
-            <div in:fly|local={{ x: -200, y: 200 }} out:fade>
+            <div
+              in:fly|local={{ x: -200, y: 200 }}
+              out:fade
+              class="day-container"
+            >
+              {#if i > 0}
+                <button class="swap" on:click={() => moveDayEarlier(i)}
+                  >↔</button
+                >
+              {/if}
               <Day
                 {day}
                 {showPassing}
@@ -214,23 +245,36 @@
         </div>
       {:else if editMode == GRID}
         <div id="view" in:fade>
-          <div class="flex">
-            <h2 contenteditable bind:textContent={$schedule.title}>Schedule</h2>
-            <button on:click={copyToClipbord}>Copy schedule</button>
-            <label>
-              <input id="tm" type="checkbox" bind:checked={timelineMode} />
-              Timeline
-            </label>
+          <div class="flex-rev-top">
+            <div class="controls">
+              <button on:click={copyToClipbord}
+                >Copy schedule <br />to clipboard</button
+              >
+              <label>
+                <input id="tm" type="checkbox" bind:checked={timelineMode} />
+                Timeline
+              </label>
+            </div>
+            <div class="schedule">
+              <h2
+                style="text-align:center"
+                contenteditable
+                bind:textContent={$schedule.title}
+              >
+                Schedule
+              </h2>
+              <div bind:this={copyContainer}>
+                <h2 style="text-align:center;" class="hide">
+                  <a href={window.location.href}>{$schedule.title}</a>
+                </h2>
+                <ScheduleTable
+                  {timelineMode}
+                  {schedule}
+                  pixelsPerMinute={ppm}
+                />
+              </div>
+            </div>
           </div>
-          <div bind:this={copyContainer}>
-            <h2 class="hide">
-              <a href={window.location.href}>{$schedule.title}</a>
-            </h2>
-            <ScheduleTable {timelineMode} {schedule} />
-          </div>
-          {#if timelineMode}
-            <div class="yardstick" />
-          {/if}
         </div>
       {:else if editMode == FLUID}
         <div class="fluid">
@@ -263,6 +307,20 @@
 </main>
 
 <style>
+  .day-container {
+    position: relative;
+  }
+  .day-container .swap {
+    position: absolute;
+    left: -1.5em;
+    top: 50px;
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   main {
     display: flex;
     flex-direction: row;
@@ -306,7 +364,7 @@
     flex-direction: row;
     width: 100%;
     justify-content: center;
-    gap: 1em;
+    gap: 2em;
   }
   .body {
     max-height: 90vh;
@@ -317,6 +375,7 @@
   }
   .container {
     min-width: calc(100% - 360px);
+    margin: auto;
   }
 
   /* Fluid layout */
@@ -358,41 +417,16 @@
     display: flex;
     gap: 5px;
   }
-  .timeline thead th {
-    min-width: 200px;
-  }
-  .timeline tbody {
-    position: relative;
-    height: var(--height);
-    width: 100%;
-    display: block;
-  }
-  .timeline tr {
-    width: 100%;
-    display: block;
-  }
-  .timeline td {
-    min-height: var(--height);
-  }
-  .timeline td {
-    overflow: hidden;
-  }
-  .timeline td:hover {
-    overflow: visible;
-    font-weight: bold;
-  }
-  .timeline td {
-    position: absolute;
-    top: var(--offset);
-    left: var(--left);
-    height: var(--height);
-    width: 200px;
-    box-sizing: border-box;
-  }
-  .timeline td.empty {
-    visibility: hidden;
-  }
+
   .hide {
     display: none;
+  }
+  .flex-rev-top {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+  }
+  .flex-rev-top .schedule {
+    margin: auto;
   }
 </style>

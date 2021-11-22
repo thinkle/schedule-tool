@@ -6,6 +6,7 @@
   export let schedule;
   export let timelineMode;
   export let measuringStick;
+  export let pixelsPerMinute;
   import { getHourTime, getBlockTimes } from "./timeUtils.js";
 
   const EDIT = 1;
@@ -33,6 +34,39 @@
     console.log("We measure!", ref);
   }
   $: colWidth = tableWidth / $schedule.days.length;
+
+  let startTime = 7 * 60;
+  $: try {
+    startTime = $schedule.days[0].start || 8 * 60;
+    console.log("We start at...", startTime);
+  } catch (err) {
+    console.log("No start block?");
+  }
+  let hourOffsets = [];
+  function calculateHours() {
+    console.log("Calc offsets", startTime);
+    hourOffsets = [];
+    let startHour = Math.floor(startTime / 60);
+    console.log("start hour", startHour);
+    for (let h = 0; h < 8; h++) {
+      let hour = startHour + h;
+      let offset = (hour * 60 - startTime) * pixelsPerMinute;
+      hourOffsets.push({
+        name: getHourTime(hour * 60),
+        offset,
+        minor: false,
+      });
+      for (let minor = 15; minor < 60; minor += 15) {
+        hourOffsets.push({
+          name: getHourTime(hour * 60 + minor),
+          offset: (hour * 60 - startTime + minor) * pixelsPerMinute,
+          minor: true,
+        });
+      }
+    }
+  }
+
+  $: calculateHours(pixelsPerMinute, startTime);
 </script>
 
 <table
@@ -84,13 +118,90 @@
         {/each}
       </tr>
     {/each}
+    {#if timelineMode}
+      <div class="time-ruler">
+        {#each hourOffsets as hour}
+          <div
+            class="hour"
+            style={`--offset:${hour.offset}px`}
+            class:minor={hour.minor}
+          >
+            <span>{hour.name}</span>
+          </div>
+        {/each}
+      </div>
+    {/if}
   </tbody>
 </table>
+
 {#if timelineMode}
   <svelte:self measuringStick={true} timelineMode={false} {schedule} />
 {/if}
 
 <style>
+  .time-ruler {
+    position: absolute;
+    top: 0;
+    left: -80px;
+    --width: 75px;
+    --height: 15px;
+  }
+  .time-ruler > div {
+    top: var(--offset);
+    position: absolute;
+    z-index: 2;
+  }
+  .time-ruler span {
+    position: relative;
+    z-index: 2;
+    width: var(--width);
+    height: calc(2 * var(--height));
+    top: calc(-1 * var(--height));
+    text-align: center;
+    color: white;
+    display: inline-grid;
+    place-content: center;
+    padding-right: var(--height);
+    box-sizing: border-box;
+  }
+  /* Arrow */
+  .time-ruler div::after {
+    position: absolute;
+    content: " ";
+    width: var(--width);
+    top: calc(-1 * var(--height));
+    border-bottom: var(--height) solid #444;
+    border-right: var(--height) solid transparent;
+    box-sizing: border-box;
+    right: 0;
+  }
+  .time-ruler div::before {
+    position: absolute;
+    top: 0;
+    content: " ";
+    right: 0;
+    width: var(--width);
+    border-top: var(--height) solid #444;
+    border-right: var(--height) solid transparent;
+    box-sizing: border-box;
+  }
+  .minor {
+    --height: 10px;
+    --width: 65px;
+  }
+  .time-ruler > .minor {
+    z-index: 1;
+  }
+  .time-ruler .minor::before {
+    border-top-color: #aaa;
+  }
+  .time-ruler .minor::after {
+    border-bottom-color: #aaa;
+  }
+  .time-ruler .minor {
+    font-size: 75%;
+  }
+
   table {
     margin: auto;
   }
@@ -123,6 +234,7 @@
   .timeline td:hover {
     overflow: visible;
     font-weight: bold;
+    z-index: 10;
   }
   .timeline td {
     position: absolute;
