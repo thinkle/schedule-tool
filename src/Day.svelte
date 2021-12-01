@@ -4,7 +4,7 @@
 
 <script>
   import { createEventDispatcher } from "svelte";
-  import { getHourTime } from "./timeUtils.js";
+  import { getHourTime, getMinutes } from "./timeUtils.js";
   import BlockEditor from "./BlockEditor.svelte";
   export let showPassing;
   export let timelineMode;
@@ -38,11 +38,6 @@
   const copyDay = () => dispatch("copy");
   let id = "day-" + Math.random();
   function emitChange() {
-    console.log("Day change", day.name, day.blocks);
-    console.log(
-      "Blocks are:",
-      day.blocks.map((b) => `${b.block?.name} ${b.duration}`)
-    );
     dispatch("change");
   }
   function addBlock() {
@@ -87,9 +82,7 @@
   }
 
   function deleteBlock(index) {
-    console.log("Delete block", index);
     day.blocks.splice(index, 1);
-    console.log("We got", day.blocks);
     emitChange();
   }
 
@@ -115,7 +108,6 @@
   function addIndices(blocks) {
     let indices = [];
     for (let b of blocks) {
-      console.log("Look at", b, b.id);
       if (!b.id) {
         b.id = indexer;
         indexer += 1;
@@ -123,22 +115,23 @@
         indexer = b.id + 1;
       }
       if (indices.indexOf(b.id) > -1) {
-        console.log("Dup! set to ", indexer);
         b.id = indexer;
         indexer += 1;
       }
       indices.push(b.id);
     }
     indexed = true;
-    console.log(
-      "Indexed!",
-      indices,
-      blocks.map((b) => b.id),
-      blocks
-    );
   }
   let indexed = false;
   $: addIndices(day.blocks);
+  let startTime = getHourTime(day.start || 8 * 60);
+  $: {
+    let newTime = getMinutes(startTime);
+    if (newTime != day.start) {
+      day.start = getMinutes(startTime);
+      emitChange();
+    }
+  }
 </script>
 
 <div class="m">
@@ -160,6 +153,15 @@
         min="1"
         max="100"
         on:change={emitChange}
+      />
+    </div>
+    <div class="flex">
+      <label for={`starttime${id}`}>Start time</label>
+      <input
+        class="time-input"
+        id={`starttime${id}`}
+        type="time"
+        bind:value={startTime}
       />
     </div>
     <div class="buttonbox">
@@ -203,6 +205,12 @@
 </div>
 
 <style>
+  .time-input {
+    width: initial;
+  }
+  .time-input::-webkit-calendar-picker-indicator {
+    filter: invert(100%);
+  }
   .timeline {
     position: relative;
   }

@@ -4,7 +4,17 @@ export function getHourTime(minutes) {
     .toString(10)
     .padStart(2, "0");
   let mins = (minutes % 60).toString(10).padStart(2, "0");
-  return `${hours}:${mins}`;
+  let pm = "";
+  if (hours > 12 && hours < 24) {
+    hours = hours - 12;
+    pm = "pm";
+  }
+  return `${hours}:${mins}${pm}`;
+}
+
+export function getMinutes(hourString24) {
+  let [hour, minute] = hourString24.split(":");
+  return Number(hour) * 60 + Number(minute);
 }
 
 export function getBlockTimes(day, i) {
