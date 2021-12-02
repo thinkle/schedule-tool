@@ -13,7 +13,7 @@
   </button>
 
   {#if !collapse}
-    <div in:fly={{ y: -200 }} out:fade>
+    <div in:fly|local={{ y: -200 }} out:fade|local>
       <slot />
     </div>
   {/if}
