@@ -74,6 +74,7 @@
     duplicateDay.name = getNextName($schedule.days[dindex].name);
     duplicateDay.repeats = 1;
     duplicateDay.blocks = $schedule.days[dindex].blocks.map((b) => ({ ...b }));
+    duplicateDay.start = day.start;
     $schedule.days.splice(dindex + 1, 0, duplicateDay);
     console.log("Copied", dindex, "got", $schedule.days);
     $schedule = $schedule;
@@ -169,10 +170,21 @@
   let showPassing;
   let timelineMode;
   let ppm = 3;
+  let showoptions = true;
 </script>
 
-<main use:mounted>
-  <header>
+<button
+  style="grid-area:topfarleft;place-self: center left;"
+  on:click={() => (showoptions = !showoptions)}
+>
+  {#if !showoptions}
+    ⋮
+  {:else}
+    ◂ Hide panel
+  {/if}
+</button>
+{#if showoptions}
+  <header use:mounted>
     <Collapser label="Settings">
       <div class="flex">
         {#if editMode == EDIT}
@@ -197,116 +209,108 @@
       <TimeEditor {schedule} />
     </Collapser>
   </header>
-  <div class="container">
-    <div class="tabs">
-      <a
-        href="#edit"
-        class:active={editMode == EDIT}
-        on:click={(e) => {
-          editMode = true;
-          e.preventDefault();
-        }}>Edit</a
-      >
-      <a
-        href="#grid"
-        class:active={editMode == GRID}
-        on:click={(e) => {
-          editMode = GRID;
-          e.preventDefault();
-        }}>View</a
-      >
-    </div>
-    <div class="body">
-      {#if editMode == EDIT}
-        <div id="edit" in:fade>
-          {#each $schedule.days as day, i}
-            <div
-              in:fly|local={{ x: -200, y: 200 }}
-              out:fade
-              class="day-container"
-            >
-              {#if i > 0}
-                <button class="swap" on:click={() => moveDayEarlier(i)}
-                  >↔</button
-                >
-              {/if}
-              <Day
-                {day}
-                {showPassing}
-                {timelineMode}
-                dayindex={i}
-                on:change={updateDay}
-                on:input={updateDay}
-                on:copy={copyDay(day)}
-                on:delete={removeDay(day)}
-              />
-            </div>
-          {/each}
+{/if}
+
+<div class="tabs">
+  <a
+    href="#edit"
+    class:active={editMode == EDIT}
+    on:click={(e) => {
+      editMode = true;
+      e.preventDefault();
+    }}>Edit</a
+  >
+  <a
+    href="#grid"
+    class:active={editMode == GRID}
+    on:click={(e) => {
+      editMode = GRID;
+      e.preventDefault();
+    }}>View</a
+  >
+</div>
+<div class="body">
+  {#if editMode == EDIT}
+    <div id="edit" in:fade>
+      {#each $schedule.days as day, i}
+        <div in:fly|local={{ x: -200, y: 200 }} out:fade class="day-container">
+          {#if i > 0}
+            <button class="swap" on:click={() => moveDayEarlier(i)}>↔</button>
+          {/if}
+          <Day
+            {day}
+            {showPassing}
+            {timelineMode}
+            dayindex={i}
+            on:change={updateDay}
+            on:input={updateDay}
+            on:copy={copyDay(day)}
+            on:delete={removeDay(day)}
+          />
         </div>
-      {:else if editMode == GRID}
-        <div id="view" in:fade>
-          <div class="flex-rev-top">
-            <div class="controls">
-              <button on:click={copyToClipbord}
-                >Copy schedule <br />to clipboard</button
-              >
-              <label>
-                <input id="tm" type="checkbox" bind:checked={timelineMode} />
-                Timeline
-              </label>
-            </div>
-            <div class="schedule">
-              <h2
-                style="text-align:center"
-                contenteditable
-                bind:textContent={$schedule.title}
-              >
-                Schedule
-              </h2>
-              <div bind:this={copyContainer}>
-                <h2 style="text-align:center;" class="hide">
-                  <a href={window.location.href}>{$schedule.title}</a>
-                </h2>
-                <ScheduleTable
-                  {timelineMode}
-                  {schedule}
-                  pixelsPerMinute={ppm}
-                />
-              </div>
-            </div>
+      {/each}
+    </div>
+  {:else if editMode == GRID}
+    <div id="view" in:fade>
+      <div class="flex-rev-top">
+        <div class="controls">
+          <button on:click={copyToClipbord}
+            >Copy schedule <br />to clipboard</button
+          >
+          <label>
+            <input id="tm" type="checkbox" bind:checked={timelineMode} />
+            Timeline
+          </label>
+        </div>
+        <div class="schedule">
+          <h2
+            style="text-align:center"
+            contenteditable
+            bind:textContent={$schedule.title}
+          >
+            Schedule
+          </h2>
+          <div bind:this={copyContainer}>
+            <h2 style="text-align:center;" class="hide">
+              <a href={window.location.href}>{$schedule.title}</a>
+            </h2>
+            <ScheduleTable {timelineMode} {schedule} pixelsPerMinute={ppm} />
           </div>
         </div>
-      {:else if editMode == FLUID}
-        <div class="fluid">
-          {#each $schedule.days as day, dn}
-            <div class="daycol">
-              <header>
-                {day.name}
-                {#if day.repeats != 1}
-                  &times;{day.repeats}
-                {/if}
-              </header>
-              {#each day.blocks as block, bn}
-                <div
-                  class="blockrow"
-                  style={`--height:${getHeight(block, $schedule)};--color:${
-                    block?.block?.color
-                  }`}
-                >
-                  {block?.block?.name || "?"}
-                  <span class="times">{getBlockTimes(day, bn)}</span>
-                  <span class="dur">({getHourTime(block.duration)})</span>
-                </div>
-              {/each}
+      </div>
+    </div>
+  {:else if editMode == FLUID}
+    <div class="fluid">
+      {#each $schedule.days as day, dn}
+        <div class="daycol">
+          <header>
+            {day.name}
+            {#if day.repeats != 1}
+              &times;{day.repeats}
+            {/if}
+          </header>
+          {#each day.blocks as block, bn}
+            <div
+              class="blockrow"
+              style={`--height:${getHeight(block, $schedule)};--color:${
+                block?.block?.color
+              }`}
+            >
+              {block?.block?.name || "?"}
+              <span class="times">{getBlockTimes(day, bn)}</span>
+              <span class="dur">({getHourTime(block.duration)})</span>
             </div>
           {/each}
         </div>
-      {/if}
+      {/each}
     </div>
-  </div>
-</main>
+  {/if}
+</div>
 
 <style>
+  .tabs {
+    grid-area: topleft;
+  }
   .day-container {
     position: relative;
   }
@@ -367,15 +371,17 @@
     gap: 2em;
   }
   .body {
-    max-height: 90vh;
     overflow-y: auto;
+    grid-area: main;
   }
   header {
-    max-width: 350px;
+    /* max-width: 350px; */
+    grid-area: sidepanel;
   }
   .container {
     min-width: calc(100% - 360px);
     margin: auto;
+    grid-area: main;
   }
 
   /* Fluid layout */
