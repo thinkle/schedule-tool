@@ -217,7 +217,7 @@
   .timeline .block {
     position: absolute;
     top: var(--voffset);
-    height: var(--height);
+    height: max(var(--height), 50px);
     display: flex;
     flex-direction: column;
   }

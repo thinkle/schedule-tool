@@ -26,6 +26,13 @@
   let active;
 </script>
 
+{#if active}
+  <div
+    class="modal-overlay"
+    style="position:fixed;z-index:10;top:0;left:0;width:100vw;height:100vh;"
+    on:click={() => (active = false)}
+  />
+{/if}
 {#if block}
   <div
     class:active
@@ -34,11 +41,12 @@
       block?.block?.textcolor || "black"
     }`}
     on:click={() => (active = true)}
-    on:mouseout={() => (active = false)}
-    on:blur={() => (active = false)}
   >
     <button on:click={deleteBlock} class="deleteButton">&times;</button>
-    <header>{getBlockTimes($schedule.days[dayindex], blockindex)}</header>
+    <header>
+      {getBlockTimes($schedule.days[dayindex], blockindex)}
+      <span class="extra-label">{block?.block?.name || ""}</span>
+    </header>
     <div class="flex">
       <div>
         <label for={`b${id}`}>Block</label><select
@@ -83,13 +91,14 @@
   div.active {
     overflow: visible;
     position: relative;
-    z-index: 5;
+    z-index: 11;
   }
   .flex {
     display: flex;
   }
   header {
-    text-align: center;
+    text-align: left;
+    padding-left: 1em;
     font-size: var(--labelSize);
   }
   div {
@@ -108,7 +117,10 @@
     color: var(--textcolor);
     border-color: black;
     position: relative;
-    height: 100%;
+    height: calc(max(100%, 75px));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   label {
     font-size: var(--labelSize);
@@ -130,5 +142,13 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+  }
+  .extra-label {
+    /* This is some ugly trickery -- if we are big enough to display
+    the label, then we move the label off the screen to the right. Otherwise,
+    it shows up in compressed mode */
+    left: calc(max(100000 * (var(--height) - 75px), 0px));
+    position: relative;
+    font-weight: bold;
   }
 </style>
