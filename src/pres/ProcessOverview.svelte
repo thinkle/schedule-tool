@@ -73,7 +73,7 @@
       {/if}
     {/each}
   {/if}
-  {#if step > npriorities && npriorities > 1}
+  {#if step > npriorities && npriorities >= 1}
     <p>Nice! You're done ranking your priorities.</p>
     <p>
       Now take a look at the schedules recommended based on your priorities. You

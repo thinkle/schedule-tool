@@ -146,6 +146,7 @@ export const priorities = [
   {
     id: "multi-long",
     desc: {
+      title: "Long Blocks",
       proName: "Multiple long blocks",
       description: `
       For classes that meet in labs, having multiple long blocks makes sharing
@@ -175,6 +176,7 @@ export const priorities = [
   {
     id: "more-enrich",
     desc: {
+      title: "Enrichment Time",
       proName: `More Enrichment time`,
       conName: `More Academic time`,
       description: `
@@ -231,6 +233,7 @@ export const priorities = [
   {
     id: "variable-subjects",
     desc: {
+      title: "Time per Subject",
       proName: "Different Times for Different Subjects",
       conName: "Treat MS Subjects as equal blocks",
       description: `
@@ -241,21 +244,24 @@ export const priorities = [
         and social studies) get longer
       blocks.
       `,
-      proList: [
+      pros: [
         "Varied class times allows our unique Project classes.",
+        `Varying time by subject lets us potentially get the best of all worlds, with more 
+        frequent meetings for skills-focused classes like Math and Spanish and longer blocks
+        for project classes.`,
         "Varied class times for different subjects gives students a varied day.",
         `The varied MS schedule enables an enrichment block to be scheduled
         in place of Spanish/Specials blocks, effectively adding enrichment
         without increasing teaching load.`,
       ],
-      conList: [
+      cons: [
         "Treating subjects as equal blocks makes building a school-wide schedule possible.",
         'All classes might benefit from schedules that allow longer blocks, not just "project" classes.',
         "Project classes could benefit from meeting more consistently than they do at present.",
       ],
     },
     binaryScore: true,
-    scoreUnit: "Treats MS subjects differently",
+    scoreUnit: "Treats Subjects Differently",
     defaultIdeal: 1,
     score: function (s) {
       if (s.meta.variableDistribution) {
@@ -329,6 +335,12 @@ export const priorities = [
         `Having more teachers work across schools would interfere w/ the team-teaching model at the MS.
         Asking teachers to work in multiple teams is bad for the coherence of teams.`,
       ],
+    },
+    scoreScale: 20,
+    defaultIdeal: 3,
+    scoreUnit: "overlapping blocks",
+    score: function (sched) {
+      return sched.meta.crossoverBlocks || 0;
     },
   },
 ];

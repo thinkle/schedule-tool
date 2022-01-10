@@ -6,6 +6,7 @@ export let schedules = [
     color: "#311B92",
     meta: {
       blockType: "4-day rotation",
+      crossoverBlocks: 3,
     },
     blocks: [
       { name: "Advisory/WIN", color: "#c5cae9", total: 25, academic: true },
@@ -424,6 +425,7 @@ export let schedules = [
     title: "HS Schedule - 2L3S - 9 Day Rotation",
     meta: {
       blockType: "9-day rotation",
+      crossoverBlocks: 2,
     },
     blocks: [
       {
@@ -1496,6 +1498,7 @@ export let schedules = [
     meta: {
       blockType: "3 day rotation (+weekly choice)",
       choiceOverlay: [0, 0, 75, 0, 0],
+      crossoverBlocks: 3,
     },
     blocks: [
       { name: "Advisory", color: "#c5cae9", total: 30, academic: true },
@@ -1726,6 +1729,7 @@ export let schedules = [
     meta: {
       blockType: "6 Day Rotation + weekly choice",
       choiceOverlay: [0, 0, 55, 0, 0],
+      crossoverBlocks: 2,
     },
     blocks: [
       {
@@ -2266,6 +2270,7 @@ export let schedules = [
       blockType: "Weekday",
       school: "MS Only",
       variableDistribution: true,
+      crossoverBlocks: 0,
     },
     blocks: [
       {
@@ -2852,7 +2857,8 @@ export let schedules = [
     title: "HS Day-of-Week Schedule",
     meta: {
       blockType: "Weekday",
-      variableDistribution: true,
+      variableDistribution: false,
+      crossoverBlocks: 0,
     },
     blocks: [
       { name: "Advisory", color: "#c5cae9", total: 14, academic: true },
@@ -3366,8 +3372,9 @@ export let schedules = [
     short: "HS",
     meta: {
       blockType: "Weekday",
-      variableDistribution: true,
+      variableDistribution: false,
       hide: true,
+      crossoverBlocks: 0,
     },
     blocks: [
       { name: "Advisory", color: "#c5cae9", total: 24, academic: true },
