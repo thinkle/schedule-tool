@@ -33,7 +33,8 @@
     <div class="instructions">
       {#if npriorities <= 1}
         <p in:fly={{ x: -50 }}>
-          First, check the box next to the factor you care most about.
+          First, check the {#if npriorities}boxes{:else}box{/if} next to the {#if npriorities}factors{:else}factor{/if}
+          you care most about.
         </p>
       {/if}
       {#if npriorities > 1}
