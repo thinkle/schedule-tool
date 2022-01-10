@@ -76,7 +76,7 @@ function makeSchedule(
 
 export let schedule = makeSchedule();
 
-function parseHash() {
+export function parseHash() {
   if (location.hash) {
     if (location.hash.substr(1, 3) == "~v2") {
       var data = JSON.parse(LZ.decompressFromBase64(location.hash.substr(4)));
@@ -103,7 +103,7 @@ function getColor(existingColors) {
       return c;
     }
   }
-  console.log("Rando color!");
+
   return `hsl(${Math.floor(Math.random() * 360)}deg,${Math.floor(
     50 + Math.random() * 50
   )}%,85%)`;
@@ -112,7 +112,6 @@ function getColor(existingColors) {
 function checkColors($schedule) {
   let update = false;
   let existingColors = $schedule.blocks.map((b) => b?.color).filter((c) => c);
-  console.log("Got colors", existingColors);
   for (let block of $schedule.blocks) {
     if (!block.color) {
       block.color = getColor(existingColors);
@@ -123,13 +122,12 @@ function checkColors($schedule) {
     schedule.set($schedule);
   }
 }
-
-schedule.subscribe((v) => {
-  checkColors(v);
-  const compressed = LZ.compressToBase64(JSON.stringify(v));
-  location.hash = "~v2" + compressed;
-});
-
-window.addEventListener("hashchange", () => {
-  parseHash();
-});
+export function setup() {
+  schedule.subscribe((v) => {
+    if (location.search.search(/pres/ == -1)) {
+      checkColors(v);
+      const compressed = LZ.compressToBase64(JSON.stringify(v));
+      location.hash = "~v2" + compressed;
+    }
+  });
+}

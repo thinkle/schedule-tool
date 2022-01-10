@@ -32,8 +32,7 @@
 
   const blockTotals = {};
 
-  function doAddBlock() {
-    console.log("addBlock", $schedule.blocks);
+  function doAddBlock() {    
     addBlock($schedule.blocks);
     $schedule = $schedule;
   }

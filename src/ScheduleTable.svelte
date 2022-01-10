@@ -3,9 +3,10 @@
 </script>
 
 <script>
+  export let compactMode = false;
   export let schedule;
   export let timelineMode;
-  export let measuringStick;
+  export let measuringStick = false;
   export let pixelsPerMinute;
   import { getHourTime, getBlockTimes } from "./timeUtils.js";
 
@@ -38,16 +39,14 @@
   let startTime = 7 * 60;
   $: try {
     startTime = $schedule.days[0].start || 8 * 60;
-    console.log("We start at...", startTime);
   } catch (err) {
     console.log("No start block?");
   }
   let hourOffsets = [];
-  function calculateHours() {
-    console.log("Calc offsets", startTime);
+  function calculateHours(pixelsPerMinute) {
+    console.log("Calculate offsets!", pixelsPerMinute);
     hourOffsets = [];
     let startHour = Math.floor(startTime / 60);
-    console.log("start hour", startHour);
     for (let h = 0; h < 8; h++) {
       let hour = startHour + h;
       let offset = (hour * 60 - startTime) * pixelsPerMinute;
@@ -118,7 +117,7 @@
         {/each}
       </tr>
     {/each}
-    {#if timelineMode}
+    {#if timelineMode && !compactMode}
       <div class="time-ruler">
         {#each hourOffsets as hour}
           <div
@@ -135,7 +134,12 @@
 </table>
 
 {#if timelineMode}
-  <svelte:self measuringStick={true} timelineMode={false} {schedule} />
+  <svelte:self
+    measuringStick={true}
+    timelineMode={false}
+    {schedule}
+    {pixelsPerMinute}
+  />
 {/if}
 
 <style>

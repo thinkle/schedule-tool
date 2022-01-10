@@ -66,3 +66,19 @@ button:not(:disabled):active {
 button:focus {
   border-color: #666;
 }
+button,
+.clickable {
+  transition: transform 300ms;
+}
+button:hover,
+.clickable:hover {
+  transform: scale(102%) translateY(3px);
+}
+
+.clickable .clickable,
+.clickable button,
+button .clickable,
+.active,
+.active button {
+  transform: none;
+}

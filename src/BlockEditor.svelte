@@ -17,8 +17,7 @@
     console.log("Weird no block");
     block = null;
   }
-  function update() {
-    console.log("Update", block);
+  function update() {    
     $schedule.days[dayindex].blocks[blockindex] = block;
     $schedule = $schedule;
   }
