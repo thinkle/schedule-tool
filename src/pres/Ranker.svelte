@@ -58,6 +58,7 @@
 
 <style>
   label {
+    max-width: 240px;
     display: grid;
     grid-template-areas:
       "check number plus"

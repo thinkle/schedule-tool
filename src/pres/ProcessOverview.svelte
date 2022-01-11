@@ -55,7 +55,7 @@
             vs. {priority.desc.conName}
           {/if}
         </h2>
-        <Ranker pid={priority.id} />
+        <div class="ranker"><Ranker pid={priority.id} /></div>
       </div>
     {/each}
   {/if}
@@ -101,7 +101,9 @@
   }
   .row {
     display: flex;
-    height: 50px;
+    min-height: 50px;
+    padding-bottom: 6px;
+    padding-top: 6px;
     align-items: center;
     justify-content: space-between;
   }
@@ -147,5 +149,15 @@
   .instructions .arrow {
     position: relative;
     top: -16px;
+  }
+
+  .ranker {
+    width: min(40vw, 240px);
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .row h2 {
+    max-width: min(60vw, 100% - 240px);
   }
 </style>
