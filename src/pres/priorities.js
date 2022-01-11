@@ -381,7 +381,7 @@ export const priorities = [
     },
     scoreUnit: "Minutes of advisory per week",
     defaultIdeal: 120,
-    scoreScale: 3,
+    scoreScale: 1,
     score: function (schedule) {
       let adv_minutes = 0;
       for (let day of schedule.days) {
