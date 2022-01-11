@@ -21,6 +21,7 @@ function isAcademicBlock(name) {
 export const priorities = [
   {
     id: "block-length",
+    title: "Block Length",
     defaultIdeal: 72,
     desc: {
       proName: "Longer Blocks",
@@ -54,6 +55,7 @@ export const priorities = [
   },
   {
     id: "meetings-per-week",
+    title: "Meetings/Wk",
     defaultIdeal: 4,
     desc: {
       proName: "More Meetings/Wk",
@@ -85,6 +87,7 @@ export const priorities = [
   },
   {
     id: "consistent-weekday",
+    title: "Weekday vs Numbered Day",
     desc: {
       proName: "Consistent day-of-week schedule",
       conName: "Numbered days",
@@ -113,6 +116,7 @@ export const priorities = [
   },
   {
     id: "consistent-bell",
+    title: "Bell Schedule Consistency",
     desc: {
       proName: "Consistent bell schedule",
       description: `Having the same start and end time to classes and to 
@@ -145,6 +149,7 @@ export const priorities = [
   },
   {
     id: "multi-long",
+    title: "Long Block Frequency",
     desc: {
       title: "Long Blocks",
       proName: "Multiple long blocks",
@@ -175,6 +180,7 @@ export const priorities = [
   },
   {
     id: "more-enrich",
+    title: "Enrichment/Choice",
     desc: {
       title: "Enrichment Time",
       proName: `More Enrichment time`,
@@ -232,6 +238,7 @@ export const priorities = [
   },
   {
     id: "variable-subjects",
+    title: "Subject Differentiation",
     desc: {
       title: "Time per Subject",
       proName: "Different Times for Different Subjects",
@@ -273,6 +280,7 @@ export const priorities = [
   },
   {
     id: "block-orders",
+    title: "Block Complexity",
     desc: {
       proName: "More block orders to remember",
       conName: "Consistent schedule",
@@ -316,6 +324,7 @@ export const priorities = [
   },
   {
     id: "crossover",
+    title: "MS/HS Crossover",
     desc: {
       proName: "Enables school crossover",
       description: `
@@ -345,6 +354,7 @@ export const priorities = [
   },
   {
     id: "adv-first",
+    title: "Advisory First?",
     desc: {
       proName: "Start w/ Advisory",
       conName: "Advisory mid-day",
@@ -375,6 +385,7 @@ export const priorities = [
   // Time in Advisory?
   {
     id: "advisory-time",
+    title: "Minutes of Advisory",
     desc: {
       proName: "More advisory",
       conName: "Less advisory",

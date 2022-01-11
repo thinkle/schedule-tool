@@ -11,6 +11,7 @@
 
 <div class="bar">
   <h3>
+    <span class="title">{priority.title}</span>
     {priority?.desc?.proName}
     {#if priority?.desc?.conName}
       vs. {priority?.desc?.conName}{/if}
@@ -66,5 +67,9 @@
     justify-content: space-between;
     gap: 15px;
     align-items: center;
+  }
+  .title {
+    font-weight: normal;
+    color: #888;
   }
 </style>

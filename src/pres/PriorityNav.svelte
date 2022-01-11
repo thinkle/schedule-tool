@@ -55,7 +55,7 @@
             $mode = "PRI";
           }}
         >
-          {p.desc.proName}
+          {p.title || p.desc.proName}
         </button>
         <Ranker pid={p.id} compact={true} />
       </li>

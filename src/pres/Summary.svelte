@@ -93,7 +93,7 @@
                 $activePri = priority.id;
               }}
             >
-              {priority.desc.proName}
+              {priority.title}
             </td>
             <td>
               <PriorityScores
@@ -135,7 +135,7 @@
                 $activePri = priority.id;
               }}
             >
-              {priority.desc.proName}
+              {priority.title}
             </td>
             <td>
               <PriorityScores
