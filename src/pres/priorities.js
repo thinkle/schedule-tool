@@ -343,6 +343,57 @@ export const priorities = [
       return sched.meta.crossoverBlocks || 0;
     },
   },
+  {
+    id: "adv-first",
+    desc: {
+      proName: "Start w/ Advisory",
+      conName: "Advisory mid-day",
+      pros: [
+        "Starting w/ advisory creates a regular, grounded way to start the day.",
+        "Late students are better off missing advisory than an academic class.",
+      ],
+      cons: [
+        "Students may be more likely to come late to school w/ advisory first.",
+      ],
+      description: `Many schedules put advisory mid-day
+      to make fitting 4 lunches easier, but many teachers advocate
+      for starting the day with advisory.`,
+    },
+    binaryScore: true,
+    scoreUnit: "Schedule starts w/ advisory",
+    defaultIdeal: 1,
+    score: function (schedule) {
+      let first = schedule.days[0].blocks[0];
+      if (first.block.name.indexOf("dvis") > -1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    },
+  },
+
+  // Time in Advisory?
+  {
+    id: "advisory-time",
+    desc: {
+      proName: "More advisory",
+      conName: "Less advisory",
+    },
+    scoreUnit: "Minutes of advisory per week",
+    defaultIdeal: 120,
+    scoreScale: 3,
+    score: function (schedule) {
+      let adv_minutes = 0;
+      for (let day of schedule.days) {
+        for (let block of day.blocks) {
+          if (block.block.name.indexOf("dvis") > -1) {
+            adv_minutes += block.duration;
+          }
+        }
+      }
+      return (adv_minutes / schedule.days.length) * 5;
+    },
+  },
 ];
 
 export function scorePriorityForSched(pid, sched, $rankPriorities) {
