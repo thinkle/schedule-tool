@@ -225,8 +225,7 @@
     width: 2em;
     position: relative;
   }
-  h4:hover span,
-  .compact:hover .score.highlight h4 span {
+  h4:hover span {
     display: block;
     position: absolute;
     left: 2em;

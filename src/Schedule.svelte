@@ -148,6 +148,11 @@
     }
     return 100 * (block.duration / maxDuration);
   }
+
+  function copyJson() {
+    navigator.clipboard.writeText(JSON.stringify($schedule));
+  }
+
   let copyContainer;
   async function copyToClipbord() {
     let changedTimeline = false;
@@ -257,6 +262,7 @@
           <button on:click={copyToClipbord}
             >Copy schedule <br />to clipboard</button
           >
+          <button on:click={copyJson}> Copy JSON </button>
           <label>
             <input id="tm" type="checkbox" bind:checked={timelineMode} />
             Timeline
