@@ -73,14 +73,15 @@
             $mode = "SCHED";
           }}
         >
-          {schedule.short}: {schedule.title}
+          <span
+            >{schedule.short}<span class="title">: {schedule.title}</span></span
+          >
+          {#if $scores[schedule.title]}
+            <div class="badge">
+              {(100 - (100 * $scores[schedule.title]) / $maxScore).toFixed(0)}
+            </div>
+          {/if}
         </button>
-
-        {#if $scores[schedule.title]}
-          <div class="badge">
-            {(100 - (100 * $scores[schedule.title]) / $maxScore).toFixed(0)}
-          </div>
-        {/if}
       </li>
     {/each}
   </ul>
@@ -101,6 +102,9 @@
     color: white;
     text-shadow: 1px 1px solid black;
     border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   ul {
     border-left: 1px solid #888;
@@ -139,5 +143,13 @@
     width: 32px;
     display: grid;
     place-content: center;
+  }
+  @media only screen and (max-width: 1000px) {
+    .title {
+      display: none;
+    }
+    .buttonStyle .title {
+      display: inline;
+    }
   }
 </style>

@@ -180,7 +180,7 @@ export const priorities = [
   },
   {
     id: "more-enrich",
-    title: "Enrichment/Choice",
+    title: "Enrichment",
     desc: {
       title: "Enrichment Time",
       proName: `More Enrichment time`,

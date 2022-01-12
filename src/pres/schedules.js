@@ -4,6 +4,13 @@ export let schedules = [
     short: "2",
     title: "Whole School 4-Day Schedule",
     color: "#311B92",
+    links: [
+      {
+        url: "https://docs.google.com/document/u/0/d/1A5GVp0J9ApqHHw12t1UsDeenWQ4ecCbEs9qtz16owIU/edit",
+        title: "Overview Google Doc",
+      },
+      { url: "https://youtu.be/8Vy2cgczO8A", title: "Screencast walk-through" },
+    ],
     meta: {
       blockType: "4-day rotation",
       crossoverBlocks: 3,
@@ -423,6 +430,13 @@ export let schedules = [
     short: "4",
     color: "#0D47A1",
     title: "HS Schedule - 2L3S - 9 Day Rotation",
+    links: [
+      {
+        url: "https://docs.google.com/document/d/1bPnpNK3SmS_xRZtvFpf6OQkj5Uliz72HsVpdfrkK9DI/edit#",
+        title: "Overview Google Doc",
+      },
+      { url: "https://youtu.be/2g2C7rpukB4", title: "Screencast walk-through" },
+    ],
     meta: {
       blockType: "9-day rotation",
       crossoverBlocks: 2,
@@ -1495,6 +1509,20 @@ export let schedules = [
     short: "3",
     color: "#0277BD",
     title: "HS 3-Day Rotating Schedule",
+    links: [
+      {
+        url: "https://docs.google.com/document/u/0/d/1lFOW3fKgnOW4oPTtVw9bduIuYb9WkhBQwfyfxKV3p38/edit",
+        title: "Overview Google Doc",
+      },
+      {
+        url: "https://youtu.be/vX59ZP100M8",
+        title: "Screencast walk-through (for MS",
+      },
+      {
+        url: "https://www.youtube.com/watch?v=dB6ciD3fedg",
+        title: "Screencast walk-through (for HS)",
+      },
+    ],
     meta: {
       blockType: "3 day rotation (+weekly choice)",
       choiceOverlay: [0, 0, 75, 0, 0],
@@ -1726,6 +1754,16 @@ export let schedules = [
     short: "1",
     title: "6 Day Rotation",
     color: "#7B1FA2",
+    links: [
+      {
+        url: "https://docs.google.com/document/d/1mBQOLOnPVoqyI44tAdPV6BWeY_nTpL0eSP_OuG9yc-o/edit?usp=sharing",
+        title: "Overview Google Doc",
+      },
+      {
+        url: "https://drive.google.com/file/d/1R9YQ05tm7-iNbEpQmLQOLqnQPZVZs7SV/view?usp=sharing",
+        title: "Screencast walk-through",
+      },
+    ],
     meta: {
       blockType: "6 Day Rotation + weekly choice",
       choiceOverlay: [0, 0, 55, 0, 0],
@@ -2266,11 +2304,17 @@ export let schedules = [
     color: "#BF360C",
     short: "5M",
     title: "MS Specific",
+    links: [
+      {
+        url: "https://docs.google.com/document/d/1tSqlif9G0zIiCByU3JImjdYMUvwxg4SAL9Xrs7r3_NA/edit?usp=sharing",
+        title: "Overview Google Doc + Screencast Links",
+      },
+    ],
     meta: {
       blockType: "Weekday",
       school: "MS Only",
       variableDistribution: true,
-      crossoverBlocks: 0,
+      crossoverBlocks: 0.333,
     },
     blocks: [
       {
@@ -2855,10 +2899,16 @@ export let schedules = [
     color: "#FF6F00",
     short: "5H",
     title: "HS Day-of-Week Schedule",
+    links: [
+      {
+        url: "https://docs.google.com/document/d/1DAZB4DKN6WHqrEKVtArgHtndITThiHXhA4DtTU0kiK0/edit?usp=sharing",
+        title: "Overview document",
+      },
+    ],
     meta: {
       blockType: "Weekday",
       variableDistribution: false,
-      crossoverBlocks: 0,
+      crossoverBlocks: 0.333,
     },
     blocks: [
       { name: "Advisory", color: "#c5cae9", total: 14, academic: true },

@@ -35,10 +35,11 @@
     position: relative;
   }
   .container {
-    margin-left: 25px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 5px;
+    text-align: right;
   }
   div.scorebox {
     width: 100px;

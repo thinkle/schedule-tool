@@ -65,62 +65,11 @@
 {/if}
 
 <style>
-  .pro-con {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-  }
-  .pro-con ul {
-    max-width: 40em;
-  }
   button {
     color: #777;
   }
   .active {
     background-color: black;
     color: white;
-  }
-  main {
-    display: grid;
-    grid-template-areas: "left center right";
-    grid-auto-columns: 200px auto 200px;
-    gap: 20px;
-    --center-label-width: 150px;
-    --active-pref-color: #222;
-    --left-pad: 0px;
-    --right-pad: 0px;
-  }
-  main *:nth-child(1) {
-    grid-area: left;
-  }
-  main *:nth-child(2) {
-    grid-area: right;
-  }
-  main *:nth-child(3) {
-    grid-area: center;
-  }
-  label.center {
-    margin-bottom: 24px;
-    margin-left: auto;
-    margin-right: auto;
-    width: var(--center-label-width);
-  }
-  label.center input {
-    width: 100%;
-  }
-  section {
-    background-color: var(--color);
-    padding-left: var(--left-pad);
-    margin-left: calc(-1 * var(--left-pad));
-    padding-left: var(--right-pad);
-    margin-right: calc(-1 * var(--right-pad));
-  }
-  section > div {
-    background-color: white;
-    margin: 10px;
-    border-radius: 15px;
-    margin: 20px;
-    padding-left: calc(40px + var(--left-pad, 0));
-    padding-right: calc(40px + var(--right-pad, 0));
   }
 </style>

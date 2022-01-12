@@ -71,8 +71,18 @@
   }
   .block-summary {
     display: grid;
-    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto;
+    grid-template-columns: 1fr auto 1fr auto;
     max-width: 800px;
+  }
+  @media only screen and (max-width: 800px) {
+    .block-summary {
+      grid-template-columns: 1fr auto;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    .block-summary {
+      grid-template-columns: 1fr auto 1fr auto 1fr auto;
+    }
   }
 
   .time-row {

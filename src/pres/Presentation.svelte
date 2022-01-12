@@ -105,7 +105,7 @@
   main {
     display: grid;
     grid-template-areas: "left center right";
-    grid-auto-columns: 200px auto 200px;
+    grid-auto-columns: minmax(auto, 200px) auto minmax(auto, 200px);
     gap: 20px;
     --center-label-width: 150px;
     --active-pref-color: #222;

@@ -57,9 +57,10 @@
     display: flex;
     justify-content: center;
     gap: 15px;
+    flex-wrap: wrap;
   }
   .pro-con ul {
-    max-width: 40em;
+    max-width: 17em;
   }
 
   .bar {

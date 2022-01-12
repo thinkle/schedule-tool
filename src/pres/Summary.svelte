@@ -57,6 +57,17 @@
       <th>Class Schedule</th>
       <td colspan="2"><BlockSummary {schedule} /></td>
     </tr>
+    {#if schedule.links}
+      <tr>
+        <th>Links</th>
+        <td>
+          {#each schedule.links as link}
+            <a target="_BLANK" href={link.url}>{link.title}</a>
+            &nbsp;
+          {/each}
+        </td>
+      </tr>
+    {/if}
     {#if mainPriorities.length}
       <tr>
         <th
@@ -86,7 +97,7 @@
       {#each mainPriorities as priority (priority.id)}
         {#if priority.score}
           <tr>
-            <td
+            <th
               class="clickable"
               on:click={() => {
                 $mode = "PRI";
@@ -94,7 +105,7 @@
               }}
             >
               {priority.title}
-            </td>
+            </th>
             <td>
               <PriorityScores
                 compact={true}
@@ -128,7 +139,7 @@
       {#each otherPriorities as priority (priority.id)}
         {#if priority.score}
           <tr>
-            <td
+            <th
               class="clickable"
               on:click={() => {
                 $mode = "PRI";
@@ -136,7 +147,7 @@
               }}
             >
               {priority.title}
-            </td>
+            </th>
             <td>
               <PriorityScores
                 compact={true}
@@ -179,5 +190,27 @@
   .right {
     text-align: right;
     width: 100%;
+  }
+
+  @media only screen and (max-width: 1300px) {
+    table {
+      display: flex;
+      flex-direction: column;
+    }
+    tr {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-bottom: 3px;
+      margin-top: 3px;
+      box-shadow: 2px 2px #efefef;
+    }
+
+    td {
+      margin-left: auto;
+    }
+    td:nth-child(1) {
+      margin-left: 0;
+    }
   }
 </style>

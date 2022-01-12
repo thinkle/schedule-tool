@@ -19,7 +19,7 @@
   let i = 0;
 
   function getOffset(score) {
-    return (400 * (score - min)) / range;
+    return (300 * (score - min)) / range;
   }
 
   for (let s of scored) {
@@ -188,7 +188,7 @@
     padding-right: 25px;
   }
   .scoreboard {
-    width: 400px;
+    width: 300px;
     height: 40px;
     border: 1px solid #eee;
     position: relative;
@@ -196,6 +196,8 @@
     justify-self: center;
     box-sizing: border-box;
     margin-bottom: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
   }
   .scoreboard.full {
     height: var(--height);
@@ -230,7 +232,7 @@
     position: absolute;
     left: 2em;
     top: 0;
-    width: 400px;
+    width: 300px;
     background-color: #333a;
     padding: 15px;
   }
