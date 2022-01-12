@@ -3417,7 +3417,7 @@ export let schedules = [
   },
 
   {
-    title: "Current MS Schedule",
+    title: "Current MS Schedule (for reference only)",
     color: "#919191",
     short: "MS",
     meta: {
