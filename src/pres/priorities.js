@@ -99,8 +99,10 @@ export const priorities = [
       cons: [
         `Holidays impact certain days of week more than others, so day-of-week schedules end
         up losing blocks to holidays unequally.`,
-        `Building a 5-day schedule imposes constraints that make other goals difficult to achieve; 
-        a numbered schedule is easier to keep track of.`,
+        `Building a 5-day schedule imposes constraints that make other goals difficult to achieve.`,
+        `Many numbered options can actually be simpler to keep track of than e.g. the current HS day-of-week schedule,
+        since they either have fewer than 5 different rotations or (in the case of the 6-day model) follow a very simple
+        pattern.`,
       ],
       description: `Every Monday looks the same, etc.`,
     },
