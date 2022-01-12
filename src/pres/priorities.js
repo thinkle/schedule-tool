@@ -410,6 +410,41 @@ export const priorities = [
       return (adv_minutes / schedule.days.length) * 5;
     },
   },
+  {
+    title: "Weekly Choice Overlay",
+    id: "choice-overlay",
+    binaryScore: true,
+    score: function (schedule) {
+      if (schedule.meta.choiceOverlay) {
+        return 1;
+      } else {
+        return 0;
+      }
+    },
+    defaultIdeal: 0,
+    scoreUnit: "Weekly Choice Overlay",
+    desc: {
+      description: `Two of the schedules take a numbered day model and then overlay a weekly choice block
+      on top of it. This is a good or bad thing depending on your persepctive`,
+      proName: "Weekly Choiceblock overlayed on Numbered Days",
+      pros: [
+        `The choice overlay keeps rotations simple while still allowing choice block.`,
+        `Having choice fall on the same day of the week might be helpful, especially
+        if we want to coordinate with outsiders (for example if HS students do an internship
+          during choice block).`,
+      ],
+      cons: [
+        `Adding a weekly choice block on top of a numbered schedule means knocking out a different
+        block each week, effectively making it feel like you "randomly" miss a block every 6 weeks.`,
+        `If we want choice blocks on different days for different parts of the school, a teacher
+        trying to run e.g. MS Band or Chorus cannot easily teach choice block at multiple levels
+         (5/6, 7/8, HS) without it interrupting
+        their schedule in the other grades in this model, since choice block will hit *every* block in the other schedules
+        once every 6 weeks. So, for example, a MS Band teacher would have to miss a different core 
+        block each week in order to teach both 5/6 and 7/8 band.`,
+      ],
+    },
+  },
 ];
 
 export function scorePriorityForSched(pid, sched, $rankPriorities) {
