@@ -61,6 +61,7 @@ export const priorities = [
       proName: "More Meetings/Wk",
       pros: [
         "More consistent class meetings provide students w/ more consistent skills practice",
+        "If there are fewer than 4 meetings per week, it is likely some teachers will have days with no planning blocks.",
       ],
       cons: [
         "It is less chaotic for students and teachers to prepare for fewer classes each day.",
@@ -157,6 +158,8 @@ export const priorities = [
       For classes that meet in labs, having multiple long blocks makes sharing
       resources easier. Schedules that have only 1 block per rotation put extra
       pressure on those resources.
+      (Note: the way I calculate long block frequency is misleading for the MS Specific schedule, 
+        since in the that schedule block length differs by subject.)
       `,
     },
     defaultIdeal: 100,
