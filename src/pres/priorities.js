@@ -24,6 +24,10 @@ export const priorities = [
     title: "Block Length",
     defaultIdeal: 72,
     desc: {
+      description: `This calculates the *average* length of a block. This can be 
+      somewhat deceptive since some schedules have varied block lengths. For Option 5
+      in particular, it's important to know that different subjects have blocks of different
+      lengths.`,
       proName: "Longer Blocks",
       conName: "Shorter Blocks",
       pros: [
@@ -58,6 +62,12 @@ export const priorities = [
     title: "Meetings/Wk",
     defaultIdeal: 4,
     desc: {
+      description: `
+      This shows the number of meetings per week for the first block in the schedule. 
+      For the current MS schedule and Option 5 this is a bit deceptive since not all
+      classes are the same (I happen to have grabbed an ELA class in the data, which is
+        why the current MS schedule shows 6 meetings per week)
+      `,
       proName: "More Meetings/Wk",
       pros: [
         "More consistent class meetings provide students w/ more consistent skills practice",
