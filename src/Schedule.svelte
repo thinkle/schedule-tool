@@ -387,10 +387,10 @@
     /* max-width: 350px; */
     grid-area: sidepanel;
   }
-  .container {
-    min-width: calc(100% - 360px);
-    margin: auto;
-    grid-area: main;
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
   /* Fluid layout */
