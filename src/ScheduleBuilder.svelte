@@ -31,7 +31,7 @@
       <p>Welcome to my schedule tool.</p>
       <p>
         Just copy the URL (Control-L, Control-C) to share your schedule idea
-        width someone.
+        with someone.
       </p>
       <p>
         This has handy tools to edit block times, edit block names, and move
