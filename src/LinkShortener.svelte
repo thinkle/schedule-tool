@@ -13,13 +13,21 @@
     } else {
       shortLinkTarget = '';
       endpoint = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(target)}`;
-      let response = await fetch(
-        endpoint, {mode:'cors'}
-      );
-      let text = await response.text();
+      //let response = await fetch(
+      //  endpoint, {mode:'cors'}
+      //);
+      let xhr = new XMLHttpRequest()
+      xhr.open('GET',endpoint);
+      xhr.onreadystatechange = (ev)=>{
+          console.log('Complete?',ev,xhr.responseText);
+          shortLink = xhr.responseText;
+        }
+      
+      xhr.send();
+      /*let text = await response.text();
       console.log('got json',text);
       shortLink = text;
-      shortLinkTarget = target;
+      shortLinkTarget = target;*/
     }
   }
 
