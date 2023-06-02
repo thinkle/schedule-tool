@@ -12,7 +12,7 @@
       console.log('Already got a link!');
     } else {
       shortLinkTarget = '';
-      endpoint = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(target)}`;
+      endpoint = `https://is.gd/create.php?format=xml&url=${encodeURIComponent(target)}`;
       //let response = await fetch(
       //  endpoint, {mode:'cors'}
       //);
@@ -33,14 +33,37 @@
 
 </script>
 
-<button on:click={getLink}>
-  Get Link
-</button>
-{#if endpoint}<a href={endpoint} target="_BLANK">Try API directly?</a>{/if}
-{#if shortLink}
-  <a href="{shortLink}">{shortLink}</a>
+
+{#if endpoint}
+  <div class="box">
+<button on:click={()=>endpoint=''}>&times;</button>
+  <iframe src={endpoint}></iframe>
+  </div>
+{:else}
+  <button on:click={getLink}>
+    Get Short Link
+  </button>
 {/if}
 <style>
+  .box {
+    width: 200px;
+    position: relative;
+  }
+  .box button {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+  }
+  .box iframe {
+    border : 1px solid;
+    padding: 1em;
+    border-radius: 8px;
+    width: 200px;
+    height: 40px;
+  }
   
 </style>
 
