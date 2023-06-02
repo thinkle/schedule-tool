@@ -1,4 +1,6 @@
 <script>
+  import LinkShortener from './LinkShortener.svelte';
+
   import ScheduleTable from "./ScheduleTable.svelte";
   import { tick } from "svelte";
   import { fly, fade } from "svelte/transition";
@@ -259,6 +261,7 @@
     <div id="view" in:fade>
       <div class="flex-rev-top">
         <div class="controls">
+          <LinkShortener></LinkShortener>
           <button on:click={copyToClipbord}
             >Copy schedule <br />to clipboard</button
           >
