@@ -328,6 +328,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    z-index: 11;
   }
   .day-container {
     position: relative;
