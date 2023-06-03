@@ -1,5 +1,5 @@
 <script>
-  import LinkShortener from './LinkShortener.svelte';
+  import LinkShortener from "./LinkShortener.svelte";
 
   import ScheduleTable from "./ScheduleTable.svelte";
   import { tick } from "svelte";
@@ -180,6 +180,10 @@
   let showoptions = true;
 </script>
 
+<svelte:head>
+  <title>{$schedule.title} (Tom's Schedule Tool)</title>
+</svelte:head>
+
 <button
   style="grid-area:topfarleft;place-self: center left;"
   on:click={() => (showoptions = !showoptions)}
@@ -235,7 +239,27 @@
       e.preventDefault();
     }}>View</a
   >
+  <h2
+    style="text-align:center"
+    contenteditable
+    bind:textContent={$schedule.title}
+  >
+    Schedule
+  </h2>
+  <div class="controls">
+    <LinkShortener />
+    <button on:click={copyToClipbord}
+      >📋 <span class="tt">Copy to clipboard</span></button
+    >
+    <button on:click={copyJson}>{"{}"} <span class="tt">Copy JSON</span></button
+    >
+    <label>
+      <input id="tm" type="checkbox" bind:checked={timelineMode} />
+      Timeline
+    </label>
+  </div>
 </div>
+
 <div class="body">
   {#if editMode == EDIT}
     <div id="edit" in:fade>
@@ -260,25 +284,7 @@
   {:else if editMode == GRID}
     <div id="view" in:fade>
       <div class="flex-rev-top">
-        <div class="controls">
-          <LinkShortener></LinkShortener>
-          <button on:click={copyToClipbord}
-            >Copy schedule <br />to clipboard</button
-          >
-          <button on:click={copyJson}> Copy JSON </button>
-          <label>
-            <input id="tm" type="checkbox" bind:checked={timelineMode} />
-            Timeline
-          </label>
-        </div>
         <div class="schedule">
-          <h2
-            style="text-align:center"
-            contenteditable
-            bind:textContent={$schedule.title}
-          >
-            Schedule
-          </h2>
           <div bind:this={copyContainer}>
             <h2 style="text-align:center;" class="hide">
               <a href={window.location.href}>{$schedule.title}</a>
@@ -319,6 +325,9 @@
 <style>
   .tabs {
     grid-area: topleft;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
   .day-container {
     position: relative;
@@ -389,7 +398,7 @@
   }
   .controls {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
   }
 

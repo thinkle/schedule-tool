@@ -85,3 +85,41 @@ button .clickable,
 .active button {
   transform: none;
 }
+button {
+  position: relative;
+}
+button:hover {
+  z-index: 2;
+}
+button .tt {
+  --tt-color : #ff8e;
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: calc(2em + 12px);
+  background-color: var(--tt-color);
+  color: #222;
+  border-radius: 8px;
+  padding: 1em;
+  transition: opacity 300ms;
+}
+button .tt::after {
+  content: "▲";
+  color: var(--tt-color);
+  position: absolute;
+  top: -18px;
+  font-size: 24px;
+  right: 8px;
+}
+button:hover .tt, button:focus .tt, button:focus-within .tt {
+  display: block;
+  opacity: 1;
+}
+button .tt.small {
+  top: calc(1em + 12px);  
+  right: -8px;
+}
+button .tt.right {
+  left : 18px;
+}

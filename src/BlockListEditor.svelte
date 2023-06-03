@@ -32,7 +32,7 @@
 
   const blockTotals = {};
 
-  function doAddBlock() {    
+  function doAddBlock() {
     addBlock($schedule.blocks);
     $schedule = $schedule;
   }
@@ -50,8 +50,12 @@
   <thead>
     <tr>
       <th>Block</th><th colspan="3">
-        <button class="dets" on:click={() => (colors = !colors)}>c</button>
-        <button class="clock" on:click={() => (expand = !expand)}>⧗</button></th
+        <button class="dets" on:click={() => (colors = !colors)}
+          >c <span class="tt small">Edit colors</span>
+        </button>
+        <button class="clock" on:click={() => (expand = !expand)}
+          >⧗ <span class="tt small">Show time calculations</span></button
+        ></th
       >
     </tr>
     <tr>
